@@ -1,0 +1,9 @@
+/* Efecto hover para los botones del sidebar */
+.sidebar-btn {
+  transition: all 0.2s ease;
+}
+.sidebar-btn:not(.bg-primary):hover {
+  background-color: rgba(255, 255, 255, 0.1); 
+  color: #ffffff !important; 
+}
+
