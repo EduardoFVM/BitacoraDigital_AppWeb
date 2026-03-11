@@ -1,4 +1,4 @@
-import { BarChart3, BookOpen, FileCheck, FolderKanban, LayoutDashboard, Settings, Users } from "lucide-react";
+import { BarChart3, BookOpen, FileCheck, FolderKanban, LayoutDashboard, MoveLeft, Settings, Users } from "lucide-react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import '../styles/global.css';
@@ -88,7 +88,7 @@ export default function CustomSidebar(){
                 })}
             </nav>
 
-            {/* CONFIGURACIÓN */}
+            {/* Salir */}
             <div className="p-2 border-top border-secondary border-opacity-25 mt-auto">
                 <NavLink 
                     to="/settings" 
@@ -98,14 +98,14 @@ export default function CustomSidebar(){
                         }`
                     }
                 >
-                    <Settings size={22} className="flex-shrink-0" />
+                    <MoveLeft size={22} className="flex-shrink-0" />
                     <span 
                         className="ms-3"
                         style={{ 
                             opacity: isHovered ? 1 : 0, 
                             transition: 'opacity 0.2s' }}
                     >
-                        Configuración
+                        Cerrar Sesión
                     </span>
                 </NavLink>
             </div>

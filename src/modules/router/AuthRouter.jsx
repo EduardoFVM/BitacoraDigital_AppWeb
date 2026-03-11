@@ -1,9 +1,9 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import PanelPrincipal from "../auth/PanelPrincipal";
-import GestionUsuarios from "../auth/GestionUsuarios";
-import Proyectos from "../auth/Proyectos";
-import Evidencias from "../auth/Evidencias";
-import Reportes from "../auth/Reportes";
+import PanelPrincipal from "../auth/panel_principal/PanelPrincipal";
+import GestionUsuarios from "../auth/gestion_usuarios/GestionUsuarios";
+import Proyectos from "../auth/proyectos/Proyectos";
+import Evidencias from "../auth/evidencias/Evidencias";
+import Reportes from "../auth/reportes/Reportes";
 import Error404 from "../error/Error404";
 import MainLayout from "../../layouts/MainLayout";
 
@@ -14,7 +14,6 @@ export default function AuthRouter(){
             <Route PATH="/auth" element={<MainLayout />}>
                 <Route index element={<Navigate to="home" replace />} />
 
-                {/* RUTAS HIJAS (Nota que ya no llevan /auth al principio) */}
                 <Route path="home" element={<PanelPrincipal />} />
                 <Route path="users" element={<GestionUsuarios />} />
                 <Route path="projects" element={<Proyectos />} />
