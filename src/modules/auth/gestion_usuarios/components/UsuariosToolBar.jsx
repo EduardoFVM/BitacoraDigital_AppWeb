@@ -1,6 +1,7 @@
 import { Funnel, Search } from "lucide-react";
+import NuevoUsuarioModal from "./NuevoUsuarioModal";
 
-export default function UsuariosToolbar() {
+export default function UsuariosToolbar({onUsuarioCreado}) {
     return (
         <div className="col-12 gap-3 justify-content-between d-flex mb-5 flex-wrap">
             {/* Buscador */}
@@ -36,10 +37,16 @@ export default function UsuariosToolbar() {
                 </div>
 
                 {/* Botón Nuevo */}
-                <button className="btn btn-primary text-nowrap px-4 fw-medium shadow-sm" style={{ height: '50px' }}> 
+                <button 
+                        className="btn btn-primary text-nowrap px-4 fw-medium shadow-sm" 
+                        style={{ height: '50px' }}
+                        data-bs-toggle="modal" 
+                        data-bs-target="#nuevoUsuarioModal"
+                    >
                     + Nuevo Usuario 
                 </button>
             </div>
+            <NuevoUsuarioModal onUsuarioCreado={onUsuarioCreado} />
         </div>
     );
 }

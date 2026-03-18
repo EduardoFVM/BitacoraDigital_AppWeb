@@ -2,12 +2,12 @@ import CustomNavbar from "../components/CustomNavBar";
 import CustomSidebar from "../components/CustomSidebar";
 import { Outlet } from "react-router-dom";
 
-export default function MainLayout(){
+export default function MainLayout({setSession}){
     const SIDEBAR_WIDTH = "80px";
 
     return(
         <div className="d-flex vh-100 overflow-hidden">
-            <CustomSidebar />
+            <CustomSidebar setSession={setSession} />
             <div
                 className="d-flex flex-column w-100"
                 style={{

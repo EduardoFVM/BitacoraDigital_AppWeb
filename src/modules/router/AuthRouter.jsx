@@ -8,10 +8,10 @@ import Error404 from "../error/Error404";
 import MainLayout from "../../layouts/MainLayout";
 
 
-export default function AuthRouter(){
+export default function AuthRouter({setSession}){
     return(<>
         <Routes>
-            <Route PATH="/auth" element={<MainLayout />}>
+            <Route path="/" element={<MainLayout setSession={setSession}/>}>
                 <Route index element={<Navigate to="home" replace />} />
 
                 <Route path="home" element={<PanelPrincipal />} />

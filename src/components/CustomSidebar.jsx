@@ -1,6 +1,6 @@
 import { BarChart3, BookOpen, FileCheck, FolderKanban, LayoutDashboard, MoveLeft, Settings, Users } from "lucide-react";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import '../styles/global.css';
 
 {/* Objeto de los links de navegación */}
@@ -12,9 +12,10 @@ const navItems = [
   { path: "/reports", label: "Reportes", icon: BarChart3 },
 ];
 
-export default function CustomSidebar(){
+export default function CustomSidebar({ setSession }){
 
     const [isHovered, setIsHovered] = useState(false);
+    const navigate = useNavigate();
 
     const sidebarStyle = {
         backgroundColor: '#101828',
@@ -28,6 +29,16 @@ export default function CustomSidebar(){
         overflowX: "hidden",
         whiteSpace: "nowrap"
     }
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
+        if (setSession) {
+            setSession(false);
+        }
+
+        navigate("/");
+    };
 
     return(
         <aside 
@@ -90,24 +101,22 @@ export default function CustomSidebar(){
 
             {/* Salir */}
             <div className="p-2 border-top border-secondary border-opacity-25 mt-auto">
-                <NavLink 
-                    to="/settings" 
-                    className={({ isActive }) => 
-                        `sidebar-btn btn d-flex align-items-center border-0 w-100 p-2 text-decoration-none ${
-                            isActive ? 'bg-primary text-white' : 'text-white-50'
-                        }`
-                    }
+                <button 
+                    onClick={handleLogout}
+                    className="sidebar-btn btn d-flex align-items-center border-0 w-100 p-2 text-decoration-none text-white-50 hover-bg-danger"
+                    style={{ background: 'transparent' }} // Quitamos el fondo para que no se vea como un botón normal hasta que le pases el mouse
                 >
                     <MoveLeft size={22} className="flex-shrink-0" />
                     <span 
-                        className="ms-3"
+                        className="ms-3 text-start"
                         style={{ 
                             opacity: isHovered ? 1 : 0, 
-                            transition: 'opacity 0.2s' }}
+                            transition: 'opacity 0.2s' 
+                        }}
                     >
                         Cerrar Sesión
                     </span>
-                </NavLink>
+                </button>
             </div>
         </aside>
     );
