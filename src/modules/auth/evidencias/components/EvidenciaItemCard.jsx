@@ -1,5 +1,6 @@
 import { Eye, FileText } from "lucide-react";
 import BaseCard from "../../../../components/cards/BaseCard";
+import DetalleEvidenciaModal from "./DetalleEvidenciaModal";
 
 export default function EvidenciaItemCard({ item }) {
     if (!item) return null;
@@ -24,9 +25,14 @@ export default function EvidenciaItemCard({ item }) {
                 <div className="col">
                     <div className="d-flex justify-content-between align-items-start mb-2">
                         <p className="h5 fw-bold mb-0">{item.titulo}</p>
-                        <button className="btn btn-outline-secondary rounded-4 btn-sm d-flex align-items-center gap-2 px-3">
+                        <button 
+                            className="btn btn-outline-secondary rounded-4 btn-sm d-flex align-items-center gap-2 px-3"
+                            data-bs-toggle="modal"
+                            data-bs-target="#detalleEvidenciaModal"    
+                        >
                             <Eye size={16} /> Ver
                         </button>
+                        <DetalleEvidenciaModal/>
                     </div>
                     
                     <div className="d-flex align-items-center gap-3 mb-2">

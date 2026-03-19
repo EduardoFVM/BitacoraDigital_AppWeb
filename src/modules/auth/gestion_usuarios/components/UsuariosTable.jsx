@@ -1,3 +1,8 @@
+import { Edit, RefreshCcw, Trash2 } from "lucide-react";
+import EditarNuevoUsuario from "./EditarUsuarioModal";
+import EliminarUsuarioModal from "./EliminarUsuarioModal";
+import CambiarEstatusModal from "./CambiarEstatusModal";
+
 export default function UsuariosTable({ usuarios }) {
     
     if (!usuarios || usuarios.length === 0) {
@@ -13,6 +18,7 @@ export default function UsuariosTable({ usuarios }) {
                         <th className="fw-medium py-3">ROL</th>
                         <th className="fw-medium py-3">PROYECTO</th>
                         <th className="fw-medium py-3">ESTADO</th>
+                        <th className="fw-medium py-3">ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,6 +34,46 @@ export default function UsuariosTable({ usuarios }) {
                                 <span className={`badge rounded-pill px-3 py-2 ${usuario.estado === 'Activo' ? 'bg-success bg-opacity-10 text-success' : 'bg-secondary bg-opacity-10 text-secondary'}`}>
                                     {usuario.estado}
                                 </span>
+                            </td>
+                            <td className="" >
+                                <div className="d-flex justify-content-center gap-2">
+                                    {/* Botón Cambiar Estado */}
+                                    <button 
+                                        onClick={() => onToggleStatus(usuario)} 
+                                        className="btn btn-sm btn-light text-secondary border-0 shadow-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#cambiarEstatusModal"
+                                        title={usuario.estado === 'Activo' ? "Desactivar" : "Activar"}
+                                    >
+                                        <RefreshCcw size={18} />
+                                    </button>
+                                    <CambiarEstatusModal/>
+
+                                    
+                                    {/* Botón Editar */}
+                                    <button 
+                                        onClick={() => onEdit(usuario)} 
+                                        className="btn btn-sm btn-light text-primary border-0 shadow-sm" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#editarUsuarioModal"
+                                        title="Editar Usuario"
+                                    >
+                                        <Edit size={18} />
+                                    </button>
+                                    <EditarNuevoUsuario />
+                                    
+                                    {/* Botón Eliminar */}
+                                    <button 
+                                        onClick={() => onDelete(usuario)} 
+                                        className="btn btn-sm btn-light text-danger border-0 shadow-sm" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#eliminarUsuarioModal"
+                                        title="Eliminar Usuario"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                    <EliminarUsuarioModal/>
+                                </div>
                             </td>
                         </tr>
                     ))}
