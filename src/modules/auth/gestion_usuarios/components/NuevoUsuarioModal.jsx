@@ -57,8 +57,6 @@ export default function NuevoUsuarioModal({ onUsuarioCreado }) {
         <div className="modal fade" id="nuevoUsuarioModal" tabIndex="-1" aria-labelledby="nuevoUsuarioModalLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content border-0 shadow" style={{ borderRadius: '12px' }}>
-                    
-                    {/* Cabecera del Modal */}
                     <div className="modal-header border-0 pb-0 pt-4 px-4 d-flex flex-column align-items-start">
                         <div className="d-flex justify-content-between w-100 mb-1">
                             <h5 className="modal-title fw-bold text-dark" id="nuevoUsuarioModalLabel">Crear Nuevo Usuario</h5>
@@ -130,7 +128,6 @@ export default function NuevoUsuarioModal({ onUsuarioCreado }) {
                             <button type="button" className="btn btn-white border shadow-sm fw-medium px-4" data-bs-dismiss="modal">
                                 Cancelar
                             </button>
-                            {/* Cambiamos el tipo a "submit" y lo deshabilitamos si está cargando */}
                             <button type="submit" className="btn btn-primary fw-medium px-4 shadow-sm" disabled={cargando}>
                                 {cargando ? 'Guardando...' : 'Crear Usuario'}
                             </button>
