@@ -6,7 +6,7 @@ TaskController.getAllByProject = async (projectId) =>
       {
          method: "GET",
          headers: {
-               "authorization": "Bearer fca6d680-cc12-4c75-a02c-39fdf2be55e8",
+               "authorization": "Bearer "+sessionStorage.getItem("token"),
                "Content-Type": "application/json",
                "Accept": "application/json"
          },

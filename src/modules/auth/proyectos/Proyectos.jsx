@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProyectosToolbar from "./components/ProyectosToolbar";
 import ProyectoCard from "./components/ProyectoCard";
+import ProjectController from "./proyectos.controller";
 
 // Mock Data para probar la vista
 const MOCK_PROYECTOS = [
@@ -40,7 +41,16 @@ const MOCK_PROYECTOS = [
 ];
 
 export default function Proyectos() {
-    const [proyectos, setProyectos] = useState(MOCK_PROYECTOS);
+    const [proyectos, setProyectos] = useState([]);
+
+    const getAll = async () => {
+        const {data} = await ProjectController.getAll();
+        if(data) setProyectos(data)
+    }
+
+    useEffect(() => {
+        getAll();
+    }, []);
 
     return (
         <div className="container-fluid p-4">
@@ -48,9 +58,9 @@ export default function Proyectos() {
                 <ProyectosToolbar />
 
                 <div className="row mt-4 g-4">
-                    {proyectos.map((proyecto, index) => (
+                    {proyectos.map((proyecto) => (
                         
-                        <div key={index} className="col-12 col-xl-6">
+                        <div key={proyecto.id} className="col-12 col-xl-6">
                             <ProyectoCard proyecto={proyecto} />
                         </div>
                     ))}

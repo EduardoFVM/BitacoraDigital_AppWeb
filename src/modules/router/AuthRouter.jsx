@@ -18,7 +18,7 @@ export default function AuthRouter({setSession}){
                 <Route path="home" element={<PanelPrincipal />} />
                 <Route path="users" element={<GestionUsuarios />} />
                 <Route path="projects" element={<Proyectos />} />
-                <Route path="tasks" element={<Tareas />} />
+                <Route path="projects/tasks" element={<Tareas />} />
                 <Route path="evidence" element={<Evidencias />} />
                 <Route path="reports" element={<Reportes />} />
             </Route>

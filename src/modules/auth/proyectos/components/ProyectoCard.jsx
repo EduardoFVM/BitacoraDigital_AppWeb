@@ -1,16 +1,17 @@
+import { Link } from "react-router-dom";
 import BaseCard from "../../../../components/cards/BaseCard";
 
 
 export default function ProyectoCard({ proyecto }) {
 
-    const title = proyecto?.title || "[Titulo]";
+    const title = proyecto?.name || "[Titulo]";
     const description = proyecto?.description || "[Texto descripitivo del proyecto]";
-    const asesor = proyecto?.asesor || "Dr. Roberto Hernández";
-    const date = proyecto?.date || "[Fecha]";
-    const progress = proyecto?.progress || 10;
-    const taskCount = proyecto?.taskCount || "0/0";
-    const hours = proyecto?.hours || 0;
-    const students = proyecto?.students || 0;
+    const asesor = proyecto?.advisorName || "Dr. Roberto Hernández";
+    const date = proyecto?.periodName || "[Fecha]";
+    const progress = (Math.round(proyecto?.completedTasks / proyecto?.totalTasks * 100)) || 0;
+    const taskCount = `${proyecto?.completedTasks}/${proyecto?.totalTasks}` || "0/0";
+    const hours = proyecto?.workedHours || 0;
+    const students = proyecto?.studentCount || 0;
     const status = proyecto?.status || "[Estado]";
 
     const isHighProgress = progress >= 80;
@@ -36,10 +37,11 @@ export default function ProyectoCard({ proyecto }) {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 py-2" aria-labelledby={`dropdownMenuButton-${proyecto?.id || Math.random()}`}>
                             <li>
-                                <a className="dropdown-item d-flex align-items-center gap-3 py-2" href="#">
+                                <Link to="/projects/tasks" state={{projectName: title, projectId: proyecto?.id}} 
+                                    className="dropdown-item d-flex align-items-center gap-3 py-2">
                                     <i className="bi bi-box-arrow-up-right"></i>
                                     <span>Ver tablero</span>
-                                </a>
+                                </Link>
                             </li>
                             <li>
                                 <a className="dropdown-item d-flex align-items-center gap-3 py-2" href="#">

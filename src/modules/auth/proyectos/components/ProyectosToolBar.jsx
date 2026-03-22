@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import NuevoProyectoModal from "./NuevoProyectoModal";
 
 export default function ProyectosToolbar() {
     return (
@@ -13,9 +14,12 @@ export default function ProyectosToolbar() {
                     placeholder="Buscar por nombre o correo..." 
                 />
             </div>
-            <button className="btn btn-primary text-nowrap px-4 fw-medium shadow-sm" style={{ height: '50px' }}> 
+            <button className="btn btn-primary text-nowrap px-4 fw-medium shadow-sm" style={{ height: '50px' }}
+                    data-bs-toggle="modal" 
+                    data-bs-target="#nuevoProyectoModal"> 
                 + Nuevo Proyecto
             </button>
+            <NuevoProyectoModal />
         </div>
     );
 }
