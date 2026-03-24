@@ -1,11 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TaskController from '../tareas.controller';
+import UserController from '../../gestion_usuarios/user.controller';
+import { useLocation } from 'react-router-dom';
 
 export default function NuevaTareaModal({ onTareaCreada }) {
+    const location = useLocation();
+    const [estudiantes, setEstudiantes] = useState([]);
 
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
-    const [idEstudianteAsignado, setIdEstudianteAsignado] = useState(0);
+    const [dueDate, setDueDate] = useState(new Date());
+    const [idEstudianteAsignado, setIdEstudianteAsignado] = useState('');
     const [cargando, setCargando] = useState(false);
 
     const botonCerrarRef = useRef(null);
@@ -16,9 +21,11 @@ export default function NuevaTareaModal({ onTareaCreada }) {
 
         try {
             const nuevaTarea = {
-                title: titulo,
+                nameTask: titulo,
                 description: descripcion,
-                assignedTo: idEstudianteAsignado
+                dueDate: dueDate,
+                projectId: location.state?.projectId,
+                studentId: idEstudianteAsignado
             };
 
             await TaskController.save(nuevaTarea);
@@ -43,6 +50,15 @@ export default function NuevaTareaModal({ onTareaCreada }) {
         }
     }
 
+    const getFormData = async () => {
+        if(location.state.projectId) {
+            setEstudiantes(await UserController.findStudentsByProject(location.state.projectId));
+        }
+    }
+    useEffect(() => {
+        getFormData();
+    }, [])
+
     return (
         <div className="modal fade" id="nuevaTareaModal" tabIndex="-1" aria-labelledby="nuevaTareaModalLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered">
@@ -66,7 +82,7 @@ export default function NuevaTareaModal({ onTareaCreada }) {
                     <form onSubmit={handleSubmit}>
                         <div className="modal-body px-4 py-4">
                             <div className="mb-3">
-                                <label className="form-label small fw-medium text-dark">Nombre Completo</label>
+                                <label className="form-label small fw-medium text-dark">Título</label>
                                 <input 
                                     type="text" 
                                     className="form-control" 
@@ -75,6 +91,12 @@ export default function NuevaTareaModal({ onTareaCreada }) {
                                     onChange={(e) => setTitulo(e.target.value)}
                                     required
                                 />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label small fw-medium text-dark">Fecha de entrega</label>
+                                <input className="form-control" type="datetime-local" required value={dueDate} 
+                                    onChange={(e) => {setDueDate(e.target.value)}}/>
                             </div>
                             
                             <div className="mb-3">
@@ -96,12 +118,13 @@ export default function NuevaTareaModal({ onTareaCreada }) {
                                 <label className="form-label small fw-medium text-dark">Estudiante Asignado</label>
                                 <select 
                                     className="form-select text-secondary"
-                                    value=""
+                                    value={idEstudianteAsignado}
+                                    onChange={(e) => setIdEstudianteAsignado(e.target.value)}
                                 >
                                     <option value="">Nombre del estudiante</option>
-                                    <option value="1">Juan Pérez</option>
-                                    <option value="2">María García</option>
-                                    <option value="3">Carlos López</option>
+                                    {estudiantes.map((estudiante) => (
+                                        <option value={estudiante.id}>{estudiante.name}</option>
+                                    ))}
                                 </select>
                             </div>
                         </div>

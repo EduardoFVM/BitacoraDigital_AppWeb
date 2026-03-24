@@ -26,6 +26,21 @@ UserController.findAll = async () =>
         return [];
     });
 
+UserController.findStudentsByProject = async (projectId) => 
+    await fetch(`${API_URL}/students/${projectId}`, {
+        method: "GET",
+        headers: getHeaders()
+    })
+    .then(response => {
+        if(!response.ok) throw new Error("Error al consultar el backend");
+        return response.json();
+    })
+    .then(result => result.data)
+    .catch(error => {
+        console.error("Error al obtener la lista de estudiantes:", error);
+        return [];
+    });
+
 UserController.save = async (usuario) => {
     const response = await fetch(API_URL, {
         method: "POST",

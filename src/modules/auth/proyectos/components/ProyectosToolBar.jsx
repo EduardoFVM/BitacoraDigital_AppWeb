@@ -1,7 +1,7 @@
 import { Search } from "lucide-react";
 import NuevoProyectoModal from "./NuevoProyectoModal";
 
-export default function ProyectosToolbar() {
+export default function ProyectosToolbar({onProyectoCreado}) {
     return (
         <div className="col-12 d-flex justify-content-between mb-4">
             <div className="input-group flex-grow-1 shadow-sm" style={{ maxWidth: '1000px', height: '50px' }}>
@@ -19,7 +19,7 @@ export default function ProyectosToolbar() {
                     data-bs-target="#nuevoProyectoModal"> 
                 + Nuevo Proyecto
             </button>
-            <NuevoProyectoModal />
+            <NuevoProyectoModal onProyectoCreado={onProyectoCreado}/>
         </div>
     );
 }

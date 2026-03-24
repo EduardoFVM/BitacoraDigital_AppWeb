@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ProjectController from '../proyectos.controller';
 
-export default function NuevoProyectoModal() {
+export default function NuevoProyectoModal({onProyectoCreado}) {
 
     const [periods, setPeriods] = useState([]);
     const [students, setStudents] = useState([]);
@@ -31,6 +31,10 @@ export default function NuevoProyectoModal() {
                 studentIds
             }
             await ProjectController.save(projectData);
+
+            if (onProyectoCreado) {
+                onProyectoCreado();
+            }
 
             if (botonCerrarRef.current) {
                 botonCerrarRef.current.click();

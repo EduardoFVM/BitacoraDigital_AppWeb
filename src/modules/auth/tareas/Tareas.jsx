@@ -37,7 +37,7 @@ export default function Tareas() {
                      + Nueva Tarea
                   </button>
             </div>
-            <NuevaTareaModal />
+            <NuevaTareaModal onTareaCreada={getAll}/>
             {tareas.length === 0 ? (
                <div className="text-center p-5 border rounded-3 bg-light text-muted mt-2">No hay tareas registradas para este proyecto.</div>
             ) : (

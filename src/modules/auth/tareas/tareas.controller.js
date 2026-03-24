@@ -15,4 +15,19 @@ TaskController.getAllByProject = async (projectId) =>
    .then(result => (result))
    .catch(console.log);
 
+TaskController.save = async (task) => 
+   await fetch(API_URL,
+      {
+         method: "POST",
+         headers: {
+               "authorization": "Bearer "+sessionStorage.getItem("token"),
+               "Content-Type": "application/json",
+               "Accept": "application/json"
+         },
+         body: JSON.stringify(task)
+      }
+   ).then(response => response.json())
+   .then(result => (result))
+   .catch(console.log);
+
 export default TaskController;

@@ -55,16 +55,20 @@ export default function Proyectos() {
     return (
         <div className="container-fluid p-4">
             <div className="row">
-                <ProyectosToolbar />
+                <ProyectosToolbar onProyectoCreado={getAll}/>
 
-                <div className="row mt-4 g-4">
-                    {proyectos.map((proyecto) => (
-                        
-                        <div key={proyecto.id} className="col-12 col-xl-6">
-                            <ProyectoCard proyecto={proyecto} />
-                        </div>
-                    ))}
-                </div>
+                {proyectos.length === 0 ? (
+                        <div className="text-center p-5 border rounded-3 bg-light text-muted">No se encontraron proyectos registrados para este perfil.</div>
+                ) : (
+                    <div className="row mt-4 g-4">
+                        {proyectos.map((proyecto) => (
+                            
+                            <div key={proyecto.id} className="col-12 col-xl-6">
+                                <ProyectoCard proyecto={proyecto} />
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
