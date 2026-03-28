@@ -42,10 +42,19 @@ const MOCK_PROYECTOS = [
 
 export default function Proyectos() {
     const [proyectos, setProyectos] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const getAll = async () => {
-        const {data} = await ProjectController.getAll();
+        let data = null;
+        if(localStorage.getItem("role") === "Admin") {
+            ({data} = await ProjectController.getAll());
+        } else if(localStorage.getItem("role") === "Asesor") {
+            const userId = localStorage.getItem("userId");
+            ({data} = await ProjectController.getByAdvisor(userId));
+        }
         if(data) setProyectos(data)
+        
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -57,18 +66,26 @@ export default function Proyectos() {
             <div className="row">
                 <ProyectosToolbar onProyectoCreado={getAll}/>
 
-                {proyectos.length === 0 ? (
-                        <div className="text-center p-5 border rounded-3 bg-light text-muted">No se encontraron proyectos registrados para este perfil.</div>
-                ) : (
-                    <div className="row mt-4 g-4">
-                        {proyectos.map((proyecto) => (
-                            
-                            <div key={proyecto.id} className="col-12 col-xl-6">
-                                <ProyectoCard proyecto={proyecto} />
-                            </div>
-                        ))}
+                {loading ? (
+                    <div className="col-12 text-center p-5 text-muted">
+                        <div className="spinner-border spinner-border-sm me-2" role="status"></div>
+                        Cargando proyectos...
                     </div>
+                ) : (
+                    proyectos.length === 0 ? (
+                            <div className="text-center p-5 border rounded-3 bg-light text-muted">No se encontraron proyectos registrados para este perfil.</div>
+                    ) : (
+                        <div className="row mt-4 g-4">
+                            {proyectos.map((proyecto) => (
+                                
+                                <div key={proyecto.id} className="col-12 col-xl-6">
+                                    <ProyectoCard proyecto={proyecto} />
+                                </div>
+                            ))}
+                        </div>
+                    )
                 )}
+
             </div>
         </div>
     );

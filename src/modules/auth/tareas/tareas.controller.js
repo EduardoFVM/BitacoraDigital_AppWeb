@@ -6,7 +6,7 @@ TaskController.getAllByProject = async (projectId) =>
       {
          method: "GET",
          headers: {
-               "authorization": "Bearer "+sessionStorage.getItem("token"),
+               "authorization": "Bearer "+localStorage.getItem("token"),
                "Content-Type": "application/json",
                "Accept": "application/json"
          },
@@ -20,7 +20,7 @@ TaskController.save = async (task) =>
       {
          method: "POST",
          headers: {
-               "authorization": "Bearer "+sessionStorage.getItem("token"),
+               "authorization": "Bearer "+localStorage.getItem("token"),
                "Content-Type": "application/json",
                "Accept": "application/json"
          },

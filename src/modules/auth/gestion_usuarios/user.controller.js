@@ -3,7 +3,7 @@ const UserController = {};
 const API_URL = "http://localhost:8081/api/users";
 
 const getHeaders = () => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     return{
         "Content-Type": "application/json",
         "Accept": "application/json",
