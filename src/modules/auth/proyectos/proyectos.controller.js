@@ -15,7 +15,21 @@ ProjectController.getAll = async () =>
    .then(result => (result))
    .catch(console.log);
 
-   ProjectController.getByAdvisor = async (advisorId) => 
+ProjectController.getById = async (projectId) => 
+   await fetch(`${API_URL}/${projectId}`,
+      {
+         method: "GET",
+         headers: {
+               "authorization": "Bearer "+localStorage.getItem("token"),
+               "Content-Type": "application/json",
+               "Accept": "application/json"
+         },
+      }
+   ).then(response => response.json())
+   .then(result => (result))
+   .catch(console.log);
+
+ProjectController.getByAdvisor = async (advisorId) => 
    await fetch(`${API_URL}/advisor/${advisorId}`,
       {
          method: "GET",
@@ -47,6 +61,21 @@ ProjectController.save = async (projectData) =>
    await fetch(API_URL,
       {
          method: "POST",
+         headers: {
+               "authorization": "Bearer "+localStorage.getItem("token"),
+               "Content-Type": "application/json",
+               "Accept": "application/json"
+         },
+         body: JSON.stringify(projectData)
+      }
+   ).then(response => response.json())
+   .then(result => (result))
+   .catch(console.log);   
+
+   ProjectController.update = async (projectData) =>
+   await fetch(API_URL,
+      {
+         method: "PUT",
          headers: {
                "authorization": "Bearer "+localStorage.getItem("token"),
                "Content-Type": "application/json",

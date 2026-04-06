@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import ProjectController from '../proyectos.controller';
 
-export default function NuevoProyectoModal({onProyectoCreado}) {
+export default function NuevoProyectoModal({onProyectoCreado, formData}) {
 
-    const [periods, setPeriods] = useState([]);
-    const [students, setStudents] = useState([]);
-    const [advisors, setAdvisors] = useState([]);
+    const [periods, setPeriods] = useState(formData.periods || []);
+    const [students, setStudents] = useState(formData.students || []);
+    const [advisors, setAdvisors] = useState(formData.advisors || []);
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [neededHours, setNeededHours] = useState(200);
     const [period, setPeriod] = useState(0);
     const [advisor, setAdvisor] = useState(0);
     const [assignedStudents, setAssignedStudents] = useState([]);
@@ -28,9 +29,15 @@ export default function NuevoProyectoModal({onProyectoCreado}) {
                 description,
                 idPeriod: period,
                 idAdviser: advisor,
-                studentIds
+                studentIds,
+                neededHours
             }
-            await ProjectController.save(projectData);
+            const response = await ProjectController.save(projectData);
+
+            if(!response.success) {
+                alert("Error al crear el proyecto: "+response.message);
+                return;
+            }
 
             if (onProyectoCreado) {
                 onProyectoCreado();
@@ -48,19 +55,14 @@ export default function NuevoProyectoModal({onProyectoCreado}) {
             
         } catch (error) {
             console.error("Error", error);
-            alert("Hubo un error al crear el usuario");
+            alert("Hubo un error al crear el proyecto");
         } finally {
             setCargando(false);
         }
     }
-    const getFormData = async () => {
-        const {data} = await ProjectController.getFormData();
-        setStudents(data.students);
-        setAdvisors(data.advisors);
-        setPeriods(data.periods);
-    }
+
     useEffect(() => {
-        getFormData();
+        //getFormData();
     }, [])
 
     return (
@@ -102,6 +104,21 @@ export default function NuevoProyectoModal({onProyectoCreado}) {
                                     placeholder="Descripción del proyecto" 
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label small fw-medium text-dark">Horas necesarias por Estudiante</label>
+                                <input 
+                                    min={200}
+                                    step={5}
+                                    max={600}
+                                    type="number" 
+                                    className="form-control" 
+                                    placeholder="Horas necesarias para acreditación" 
+                                    value={neededHours}
+                                    onChange={(e) => setNeededHours(e.target.value)}
                                     required
                                 />
                             </div>

@@ -1,7 +1,10 @@
 import { Search } from "lucide-react";
 import NuevoProyectoModal from "./NuevoProyectoModal";
+import { useState } from "react";
 
-export default function ProyectosToolbar({onProyectoCreado}) {
+export default function ProyectosToolbar({onProyectoCreado, formData, onSearch}) {
+    const [searchText, setSearchText] = useState('');
+
     return (
         <div className="col-12 d-flex justify-content-between mb-4">
             <div className="input-group flex-grow-1 shadow-sm" style={{ maxWidth: '1000px', height: '50px' }}>
@@ -11,7 +14,12 @@ export default function ProyectosToolbar({onProyectoCreado}) {
                 <input 
                     type="search" 
                     className="form-control border-start-0 ps-0" 
-                    placeholder="Buscar por nombre o correo..." 
+                    placeholder="Buscar por nombre o correo..."
+                    value={searchText}
+                    onChange={(e) => {
+                        setSearchText(e.target.value)
+                        onSearch(e.target.value)
+                    }} 
                 />
             </div>
             <button className="btn btn-primary text-nowrap px-4 fw-medium shadow-sm" style={{ height: '50px' }}
@@ -19,7 +27,7 @@ export default function ProyectosToolbar({onProyectoCreado}) {
                     data-bs-target="#nuevoProyectoModal"> 
                 + Nuevo Proyecto
             </button>
-            <NuevoProyectoModal onProyectoCreado={onProyectoCreado}/>
+            <NuevoProyectoModal onProyectoCreado={onProyectoCreado} formData={formData}/>
         </div>
     );
 }

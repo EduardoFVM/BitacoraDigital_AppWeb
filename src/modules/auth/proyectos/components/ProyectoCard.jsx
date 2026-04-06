@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import BaseCard from "../../../../components/cards/BaseCard";
 
 
-export default function ProyectoCard({ proyecto }) {
+export default function ProyectoCard({ proyecto, setSelectedProjectId }) {
 
     const title = proyecto?.name || "[Titulo]";
     const description = proyecto?.description || "[Texto descripitivo del proyecto]";
@@ -43,7 +43,9 @@ export default function ProyectoCard({ proyecto }) {
                                     <span>Ver tablero</span>
                                 </Link>
                             </li>
-                            <li>
+                            <li onClick={() => setSelectedProjectId(proyecto?.id)} 
+                                data-bs-toggle="modal" data-bs-target="#editarProyectoModal"
+                            >
                                 <a className="dropdown-item d-flex align-items-center gap-3 py-2" href="#">
                                     <i className="bi bi-pencil"></i>
                                     <span>Editar</span>
