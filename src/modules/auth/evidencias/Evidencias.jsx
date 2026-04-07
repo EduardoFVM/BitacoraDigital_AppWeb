@@ -1,47 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EstadisticasCard from "../panel_principal/components/EstadisticasCard"; 
 import EvidenciasToolbar from "./components/EvidenciasToolbar";
 import EvidenciaItemCard from "./components/EvidenciaItemCard";
-
-const MOCK_STATS = [
-    { title: "Pendientes", value: "12", iconId: "clock", color: "bg-warning text-dark" },
-    { title: "Aprobadas", value: "12", iconId: "circle-check", color: "bg-success" },
-    { title: "Rechazadas", value: "12", iconId: "circle-x", color: "bg-danger" }
-];
-
-const MOCK_EVIDENCIAS = [
-    {
-        titulo: "Diagrama de Base de Datos",
-        estado: "Aprobada",
-        proyecto: "Sistema de Inventarios",
-        descripcion: "Se adjunta el modelo Entidad-Relación actualizado según los requerimientos del cliente.",
-        usuario: "María García",
-        fecha: "04/02/2026",
-        hora: "10:30 AM"
-    },
-    {
-        titulo: "Bocetos UI/UX",
-        estado: "Pendiente",
-        proyecto: "App Móvil Clínica",
-        descripcion: "Pantallas iniciales del flujo de inicio de sesión y registro de pacientes.",
-        usuario: "Diego Flores",
-        fecha: "03/02/2026",
-        hora: "16:45 PM"
-    },
-    {
-        titulo: "Código de Autenticación",
-        estado: "Rechazada",
-        proyecto: "Portal Web Escolar",
-        descripcion: "Falta implementar el cifrado de contraseñas y validación de tokens.",
-        usuario: "Pedro Ramirez",
-        fecha: "01/02/2026",
-        hora: "09:15 AM"
-    }
-];
+import EvidenceController from "./evidences.controller";
+import DetalleEvidenciaModal from "./components/DetalleEvidenciaModal";
 
 export default function Evidencias() {
+    const MOCK_STATS = [
+        { title: "Pendientes", value: "N/A", iconId: "clock", color: "bg-warning text-dark" },
+        { title: "Aprobadas", value: "N/A", iconId: "circle-check", color: "bg-success" },
+        { title: "Rechazadas", value: "N/A", iconId: "circle-x", color: "bg-danger" }
+    ];
     const [stats, setStats] = useState(MOCK_STATS);
-    const [evidencias, setEvidencias] = useState(MOCK_EVIDENCIAS);
+    const [evidencias, setEvidencias] = useState([]);
+    const [loading, setLoading] = useState(true)
+    const [selectedEvidence, setSelectedEvidence] = useState({})
+
+    const loadEvidences = async () => {
+        let data = null
+        if(localStorage.getItem("role") === "Admin") {
+            ({data} = await EvidenceController.getAll());
+        } else if(localStorage.getItem("role") === "Asesor") {
+            const userId = localStorage.getItem("userId");
+            ({data} = await EvidenceController.getByAdvisorId(userId));
+        }
+        if(data){
+            setEvidencias(data);
+            setStats(prevStats => prevStats.map(stat => {
+                    if (stat.iconId === "clock") {
+                        return { ...stat, value: data.filter(e => e.status === "in_revision").length };
+                    }
+                    if (stat.iconId === "circle-check") {
+                        return { ...stat, value: data.filter(e => e.status === "approved").length };
+                    }
+                    if (stat.iconId === "circle-x") {
+                        return { ...stat, value: data.filter(e => e.status === "rejected").length };
+                    }
+                    return stat;
+                })
+            );
+        }
+
+        setLoading(false);
+    }
+    const loadDetailsModal = (evidence) => {
+        setSelectedEvidence(evidence);
+    }
+
+
+    useEffect(() => {
+        loadEvidences()
+    }, [])
 
     return (
         <div className="container-fluid p-4">
@@ -56,11 +65,21 @@ export default function Evidencias() {
             </div>
 
             <div className="row">
-                <div className="col-12">
-                    {evidencias.map((evidencia, index) => (
-                        <EvidenciaItemCard key={index} item={evidencia} />
-                    ))}
-                </div>
+                {loading ? (
+                    <div className="col-12 text-center p-5 text-muted">
+                        <div className="spinner-border spinner-border-sm me-2" role="status"></div>
+                        Cargando evidencias...
+                    </div>
+                ) : (
+                    evidencias.length === 0 ? (
+                        <div className="text-center p-5 border rounded-3 bg-light text-muted">Aún no hay evidencias registradas para este perfil.</div>
+                    ) : (
+                        evidencias.map((evidencia, index) => (
+                            <EvidenciaItemCard key={index} item={evidencia} onSelectedItem={loadDetailsModal}/>
+                        ))
+                    )
+                )}
+                <DetalleEvidenciaModal item={selectedEvidence} onEvidenceUpdate={loadEvidences}/>
             </div>
         </div>
     );

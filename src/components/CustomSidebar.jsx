@@ -33,6 +33,8 @@ export default function CustomSidebar({ setSession }){
     const handleLogout = () => {
         sessionStorage.removeItem("token");
         localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("role");
         if (setSession) {
             setSession(false);
         }

@@ -36,8 +36,9 @@ export default function CustomNavbar() {
         '/projects': 'Proyectos',
         '/evidence': 'Evidencias',
         '/reports': 'Reportes',
-        '/settings': 'Configuración del Sistema'
-    };
+        '/settings': 'Configuración del Sistema',
+        '/projects/tasks': `Tablero de Tareas ${location.state?.projectName ? ` - ${location.state.projectName}` : ''}`
+    }
 
     const currentTitle = pageTitles[location.pathname] || 'Bitácora Digital';
 

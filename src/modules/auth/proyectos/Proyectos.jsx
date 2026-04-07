@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProyectosToolbar from "./components/ProyectosToolbar";
 import ProyectoCard from "./components/ProyectoCard";
+import ProjectController from "./proyectos.controller";
+import EditarProyectoModal from "./components/EditarProyectoModal";
 
 const MOCK_PROYECTOS = [
     {
@@ -39,21 +41,86 @@ const MOCK_PROYECTOS = [
 ];
 
 export default function Proyectos() {
-    const [proyectos, setProyectos] = useState(MOCK_PROYECTOS);
+    const [selectedProjectId, setSelectedProjectId] = useState(null);
+    const [formData, setFormData] = useState({});
+    const [proyectos, setProyectos] = useState([]);
+    const [projectList, setProjectList] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const getAll = async () => {
+        let data = null;
+        let comingFormData = null;
+                
+        setLoading(true);
+
+        if(localStorage.getItem("role") === "Admin") {
+            ({data} = await ProjectController.getAll());
+        } else if(localStorage.getItem("role") === "Asesor") {
+            const userId = localStorage.getItem("userId");
+            ({data} = await ProjectController.getByAdvisor(userId));
+        }
+        if(data){ 
+            setProyectos(data);
+            setProjectList(data);
+        }
+
+        ({data: comingFormData} = await ProjectController.getFormData());
+        if(comingFormData) {
+            setFormData(comingFormData);
+        }
+        
+        setLoading(false);
+    }
+    const loadUpdateModal = (id) => {
+        setSelectedProjectId(id);
+    }
+    const search = (searchText) => {
+        const searchCriteria = searchText.trim().toLowerCase();
+        if(searchCriteria === '') {
+            setProjectList(proyectos);
+        } else {
+            const filtered = proyectos.filter(proyecto =>
+                proyecto.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchCriteria) ||
+                proyecto.advisorName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchCriteria) ||
+                proyecto.periodName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchCriteria) ||
+                proyecto.description.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchCriteria)
+            );
+            setProjectList(filtered);
+        }
+    }
+    
+    useEffect(() => {
+        getAll();
+    }, []);
 
     return (
         <div className="container-fluid p-4">
             <div className="row">
-                <ProyectosToolbar />
 
-                <div className="row mt-4 g-4">
-                    {proyectos.map((proyecto, index) => (
-                        
-                        <div key={index} className="col-12 col-xl-6">
-                            <ProyectoCard proyecto={proyecto} />
-                        </div>
-                    ))}
-                </div>
+                {loading ? (
+                    <div className="col-12 text-center p-5 text-muted">
+                        <div className="spinner-border spinner-border-sm me-2" role="status"></div>
+                        Cargando proyectos...
+                    </div>
+                ) : (
+                    proyectos.length === 0 ? (
+                        <div className="text-center p-5 border rounded-3 bg-light text-muted">No se encontraron proyectos registrados para este perfil.</div>
+                    ) : (
+                        <>
+                            <ProyectosToolbar onProyectoCreado={getAll} formData={formData} onSearch={search}/>
+                            <div className="row mt-4 g-4">
+                                {projectList.map((proyecto) => (
+                                    
+                                    <div key={proyecto.id} className="col-12 col-xl-6">
+                                        <ProyectoCard proyecto={proyecto} setSelectedProjectId={loadUpdateModal} />
+                                    </div>
+                                ))}
+                            </div>
+                            <EditarProyectoModal formData={formData} onProyectoActualizado={getAll} selectedProjectId={selectedProjectId}/>
+                        </>
+                    )
+                )}
+
             </div>
         </div>
     );

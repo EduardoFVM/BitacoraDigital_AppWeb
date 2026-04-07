@@ -27,7 +27,10 @@ export default function Login({ setSession}){
 
             const realToken = result.token;
 
-            sessionStorage.setItem("token", realToken);
+            localStorage.setItem("token", realToken);
+            localStorage.setItem("userId", result.userId);
+            localStorage.setItem("role", result.role);
+
             setSession(true);
             navigate("/home");
         } catch (err) {

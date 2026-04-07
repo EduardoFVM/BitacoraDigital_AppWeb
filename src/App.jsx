@@ -6,7 +6,7 @@ export default function App(){
     const [session, setSession] = useState(false);
 
     useEffect(() => {
-        if(!session && !!sessionStorage.getItem('token')){
+        if(!session && !!localStorage.getItem('token')){
             setSession(true);
         }
     }, [session]);
