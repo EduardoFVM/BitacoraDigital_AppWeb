@@ -104,8 +104,10 @@ export default function NuevoUsuarioModal({ onUsuarioCreado }) {
                                     value={rol}
                                     onChange={(e) => setRol(e.target.value)}
                                 >
-                                    <option value="estudiante">Estudiante</option>
-                                    <option value="administrador">Asesor</option>
+                                    <option>-- Selecciona Una Opción --</option>
+                                    <option value="Estudiante">Estudiante</option>
+                                    <option value="Asesor">Asesor</option>
+                                    <option value="Administrador">Administrador</option>
                                 </select>
                             </div>
                             

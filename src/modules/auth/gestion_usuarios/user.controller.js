@@ -40,4 +40,31 @@ UserController.save = async (usuario) => {
     return await response.json();
 };
 
+UserController.update = async (id, usuario) => {
+    const response = await fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(usuario)
+    });
+
+    if (!response.ok) {
+        throw new Error(`Error al actualizar el usuario con ID: ${id}`);
+    }
+
+    return await response.json();
+};
+
+UserController.updateStatus = async (id) => {
+    const response = await fetch(`${API_URL}/${id}/status`, {
+        method: "PATCH", 
+        headers: getHeaders()
+    });
+
+    if (!response.ok) {
+        throw new Error(`Error al cambiar el estatus del usuario con ID: ${id}`);
+    }
+
+    return await response.json();
+};
+
 export default UserController;

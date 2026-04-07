@@ -58,7 +58,7 @@ export default function CustomSidebar({ setSession }){
                     style={{ 
                         opacity: isHovered ? 1 : 0, 
                         transition: 'opacity 0.2s ease',
-                        pointerEvents: isHovered ? 'auto' : 'none' // Evita clicks fantasmas
+                        pointerEvents: isHovered ? 'auto' : 'none'
                     }}
                 >
                     <h3 className="h6 mb-0 fw-bold">Bitacora Digital</h3>
@@ -104,7 +104,7 @@ export default function CustomSidebar({ setSession }){
                 <button 
                     onClick={handleLogout}
                     className="sidebar-btn btn d-flex align-items-center border-0 w-100 p-2 text-decoration-none text-white-50 hover-bg-danger"
-                    style={{ background: 'transparent' }} // Quitamos el fondo para que no se vea como un botón normal hasta que le pases el mouse
+                    style={{ background: 'transparent' }}
                 >
                     <MoveLeft size={22} className="flex-shrink-0" />
                     <span 

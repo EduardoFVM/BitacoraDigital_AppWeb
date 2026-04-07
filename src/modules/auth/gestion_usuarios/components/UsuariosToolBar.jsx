@@ -1,7 +1,15 @@
 import { Funnel, Search } from "lucide-react";
 import NuevoUsuarioModal from "./NuevoUsuarioModal";
 
-export default function UsuariosToolbar({onUsuarioCreado}) {
+export default function UsuariosToolbar({ 
+    onUsuarioCreado, 
+    busqueda, 
+    setBusqueda, 
+    filtroRol, 
+    setFiltroRol 
+}) {
+    const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuario") || "{}");
+    const esAdmin = usuarioLogueado.rol === "Administrador" || usuarioLogueado.rol === "ADMIN";
     return (
         <div className="col-12 gap-3 justify-content-between d-flex mb-5 flex-wrap">
             {/* Buscador */}
@@ -13,11 +21,13 @@ export default function UsuariosToolbar({onUsuarioCreado}) {
                     type="search" 
                     className="form-control border-start-0 ps-0" 
                     placeholder="Buscar por nombre o correo..." 
+                    value={busqueda}
+                    onChange={(e) => setBusqueda(e.target.value)}
                 />
             </div>
             
+            {/* Filtro */}
             <div className="d-flex gap-3">
-                {/* Filtro */}
                 <div className="dropdown">
                     <button 
                         className="btn bg-white border shadow-sm d-flex align-items-center gap-2 px-4" 
@@ -26,25 +36,47 @@ export default function UsuariosToolbar({onUsuarioCreado}) {
                         style={{ height: '50px' }} 
                     >
                         <Funnel size={18} className="text-muted" />
-                        <span className="text-dark fw-medium">Filtros</span>
+                        <span className="text-dark fw-medium">
+                            {filtroRol === 'Todos' ? 'Filtros' : filtroRol}
+                        </span>
                     </button>
+
                     <ul className="dropdown-menu shadow border-0 mt-2">
-                        <li><a className="dropdown-item fw-bold" href="#">Todos los roles</a></li>
+                        <li>
+                            <button className={`dropdown-item ${filtroRol === 'Todos' ? 'fw-bold' : ''}`} onClick={() => setFiltroRol('Todos')}>
+                                Todos los roles
+                            </button>
+                        </li>
                         <li><hr className="dropdown-divider" /></li>
-                        <li><a className="dropdown-item" href="#">Administrador</a></li>
-                        <li><a className="dropdown-item" href="#">Estudiante</a></li>
+                        <li>
+                            <button className={`dropdown-item ${filtroRol === 'Administrador' ? 'fw-bold' : ''}`} onClick={() => setFiltroRol('Administrador')}>
+                                Administrador
+                            </button>
+                        </li>
+                        <li>
+                            <button className={`dropdown-item ${filtroRol === 'Asesor' ? 'fw-bold' : ''}`} onClick={() => setFiltroRol('Asesor')}>
+                                Asesor
+                            </button>
+                        </li>
+                        <li>
+                            <button className={`dropdown-item ${filtroRol === 'Estudiante' ? 'fw-bold' : ''}`} onClick={() => setFiltroRol('Estudiante')}>
+                                Estudiante
+                            </button>
+                        </li>
                     </ul>
                 </div>
 
                 {/* Botón Nuevo */}
-                <button 
-                        className="btn btn-primary text-nowrap px-4 fw-medium shadow-sm" 
-                        style={{ height: '50px' }}
-                        data-bs-toggle="modal" 
-                        data-bs-target="#nuevoUsuarioModal"
-                    >
+                {esAdmin && (
+                    <button 
+                    className="btn btn-primary text-nowrap px-4 fw-medium shadow-sm" 
+                    style={{ height: '50px' }}
+                    data-bs-toggle="modal" 
+                    data-bs-target="#nuevoUsuarioModal"
+                >
                     + Nuevo Usuario 
                 </button>
+                )}
             </div>
             <NuevoUsuarioModal onUsuarioCreado={onUsuarioCreado} />
         </div>

@@ -2,7 +2,6 @@ import { useState } from "react";
 import ProyectosToolbar from "./components/ProyectosToolbar";
 import ProyectoCard from "./components/ProyectoCard";
 
-// Mock Data para probar la vista
 const MOCK_PROYECTOS = [
     {
         title: "Sistema de Inventarios Inteligente",

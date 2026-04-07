@@ -4,7 +4,6 @@ import EstadisticasCard from "./components/EstadisticasCard";
 import ProgresoProyectoItem from "./components/ProgresoProyectoItem";
 import ValidacionesCard from "./components/ValidacionesCard";
 
-// 1. Tus Mock Data (preparados para ser reemplazados por el backend)
 const MOCK_STATS = [
     { title: "Estudiantes Activos", value: "48", iconId: "users", color: "bg-primary" },
     { title: "Proyectos en Curso", value: "12", iconId: "projects", color: "bg-danger" },
@@ -35,7 +34,6 @@ export default function PanelPrincipal() {
 
     return (
         <div className="container-fluid p-0">
-            {/* SECCIÓN 1: ESTADÍSTICAS */}
             <div className="row g-4 mb-5">
                 {stats.map((stat, index) => (
                     <EstadisticasCard key={index} item={stat} />
@@ -43,7 +41,6 @@ export default function PanelPrincipal() {
             </div>
 
             <div className="row g-4">
-                {/* SECCIÓN 2: AVANCE DE PROYECTOS */}
                 <div className="col-12 col-lg-8">
                     <BaseCard style={{ height: '100%', minHeight: '620px' }}>
                         <div className="p-4 mb-4 d-flex justify-content-between align-items-center">
@@ -58,7 +55,6 @@ export default function PanelPrincipal() {
                     </BaseCard>
                 </div>
 
-                {/* SECCIÓN 3: VALIDACIONES PENDIENTES */}
                 <div className="col-12 col-lg-4">
                     <BaseCard style={{ height: '100%', minHeight: '620px' }}>
                         <div className="p-4">

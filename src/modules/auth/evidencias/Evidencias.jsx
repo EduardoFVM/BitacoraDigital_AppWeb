@@ -1,17 +1,14 @@
 import { useState } from "react";
-// REUTILIZAMOS tu componente anterior (Ajusta la ruta si es necesario)
 import EstadisticasCard from "../panel_principal/components/EstadisticasCard"; 
 import EvidenciasToolbar from "./components/EvidenciasToolbar";
 import EvidenciaItemCard from "./components/EvidenciaItemCard";
 
-// Mock Data de las tarjetas de arriba (OJO: usando iconId como aprendimos)
 const MOCK_STATS = [
     { title: "Pendientes", value: "12", iconId: "clock", color: "bg-warning text-dark" },
     { title: "Aprobadas", value: "12", iconId: "circle-check", color: "bg-success" },
     { title: "Rechazadas", value: "12", iconId: "circle-x", color: "bg-danger" }
 ];
 
-// Mock Data de la lista de evidencias
 const MOCK_EVIDENCIAS = [
     {
         titulo: "Diagrama de Base de Datos",
