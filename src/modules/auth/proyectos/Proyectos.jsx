@@ -46,14 +46,16 @@ export default function Proyectos() {
     const [proyectos, setProyectos] = useState([]);
     const [projectList, setProjectList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingForm, setLoadingForm] = useState(true);
 
     const getAll = async () => {
         let data = null;
         let comingFormData = null;
                 
         setLoading(true);
+        setLoadingForm(true);
 
-        if(localStorage.getItem("role") === "Admin") {
+        if(localStorage.getItem("role") === "Administrador") {
             ({data} = await ProjectController.getAll());
         } else if(localStorage.getItem("role") === "Asesor") {
             const userId = localStorage.getItem("userId");
@@ -67,6 +69,7 @@ export default function Proyectos() {
         ({data: comingFormData} = await ProjectController.getFormData());
         if(comingFormData) {
             setFormData(comingFormData);
+            setLoadingForm(false);
         }
         
         setLoading(false);
@@ -96,6 +99,10 @@ export default function Proyectos() {
     return (
         <div className="container-fluid p-4">
             <div className="row">
+                {!loadingForm ? (
+                    <ProyectosToolbar onProyectoCreado={getAll} formData={formData} onSearch={search}/>
+                ) : (<></>)}
+                
 
                 {loading ? (
                     <div className="col-12 text-center p-5 text-muted">
@@ -107,7 +114,6 @@ export default function Proyectos() {
                         <div className="text-center p-5 border rounded-3 bg-light text-muted">No se encontraron proyectos registrados para este perfil.</div>
                     ) : (
                         <>
-                            <ProyectosToolbar onProyectoCreado={getAll} formData={formData} onSearch={search}/>
                             <div className="row mt-4 g-4">
                                 {projectList.map((proyecto) => (
                                     

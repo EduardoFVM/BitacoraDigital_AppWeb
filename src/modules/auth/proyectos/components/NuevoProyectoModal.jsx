@@ -32,10 +32,10 @@ export default function NuevoProyectoModal({onProyectoCreado, formData}) {
                 studentIds,
                 neededHours
             }
-            const response = await ProjectController.save(projectData);
+            const {message, error} = await ProjectController.save(projectData);
 
-            if(!response.success) {
-                alert("Error al crear el proyecto: "+response.message);
+            if(error) {
+                alert("Error al crear el proyecto: "+message);
                 return;
             }
 
