@@ -11,7 +11,7 @@ export default function EvidenciasToolbar() {
                 <input 
                     type="search" 
                     className="form-control border-start-0 ps-0" 
-                    placeholder="Buscar por nombre o correo..." 
+                    placeholder="Buscar por estudiante, tarea o proyecto" 
                 />
             </div>
             

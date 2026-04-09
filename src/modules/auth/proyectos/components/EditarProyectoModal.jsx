@@ -33,7 +33,9 @@ export default function EditarProyectoModal({selectedProjectId, onProyectoActual
                 studentIds,
                 neededHours
             }
-            const {error, message} = await ProjectController.update(projectData);
+
+            const {message, error} = await ProjectController.update(projectData);
+
             if(error) {
                 alert("Error al actualizar el proyecto: "+message);
                 return;

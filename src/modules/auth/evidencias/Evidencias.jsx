@@ -18,7 +18,7 @@ export default function Evidencias() {
 
     const loadEvidences = async () => {
         let data = null
-        if(localStorage.getItem("role") === "Admin") {
+        if(localStorage.getItem("role") === "Administrador") {
             ({data} = await EvidenceController.getAll());
         } else if(localStorage.getItem("role") === "Asesor") {
             const userId = localStorage.getItem("userId");

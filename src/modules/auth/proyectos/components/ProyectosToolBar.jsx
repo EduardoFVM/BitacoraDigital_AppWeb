@@ -14,7 +14,7 @@ export default function ProyectosToolbar({onProyectoCreado, formData, onSearch})
                 <input 
                     type="search" 
                     className="form-control border-start-0 ps-0" 
-                    placeholder="Buscar por nombre o correo..."
+                    placeholder="Buscar por nombre, descripción, asesor o periodo..."
                     value={searchText}
                     onChange={(e) => {
                         setSearchText(e.target.value)

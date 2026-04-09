@@ -53,9 +53,10 @@ export default function Proyectos() {
         let comingFormData = null;
                 
         setLoading(true);
-        setLoadingForm(true)
 
-        if(localStorage.getItem("role") === "Admin") {
+        setLoadingForm(true);
+
+        if(localStorage.getItem("role") === "Administrador") {
             ({data} = await ProjectController.getAll());
         } else if(localStorage.getItem("role") === "Asesor") {
             const userId = localStorage.getItem("userId");
@@ -101,9 +102,7 @@ export default function Proyectos() {
             <div className="row">
                 {!loadingForm ? (
                     <ProyectosToolbar onProyectoCreado={getAll} formData={formData} onSearch={search}/>
-                ) : (
-                    <></>
-                )}
+                ) : (<></>)}
 
                 {loading ? (
                     <div className="col-12 text-center p-5 text-muted">
