@@ -1,4 +1,4 @@
-import { BarChart3, BookOpen, FileCheck, FolderKanban, LayoutDashboard, MoveLeft, Settings, Users } from "lucide-react";
+import { BarChart3, BookOpen, FileCheck, FolderKanban, LayoutDashboard, MoveLeft, Settings, Users, CalendarClock } from "lucide-react";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import '../styles/global.css';
@@ -7,6 +7,7 @@ import '../styles/global.css';
 const navItems = [
   { path: "/home", label: "Panel Principal", icon: LayoutDashboard },
   { path: "/users", label: "Gestión de Usuarios", icon: Users },
+  { path: "/periods", label: "Periodos", icon: CalendarClock },
   { path: "/projects", label: "Proyectos", icon: FolderKanban },
   { path: "/evidence", label: "Evidencias", icon: FileCheck },
   { path: "/reports", label: "Reportes", icon: BarChart3 },

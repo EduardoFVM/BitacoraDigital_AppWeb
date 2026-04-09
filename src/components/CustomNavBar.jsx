@@ -33,6 +33,7 @@ export default function CustomNavbar() {
     const pageTitles = {
         '/home': 'Panel Principal',
         '/users': 'Gestión de Usuarios',
+        '/periods': 'Periodos',
         '/projects': 'Proyectos',
         '/evidence': 'Evidencias',
         '/reports': 'Reportes',
