@@ -25,6 +25,20 @@ export default function Login({ setSession}){
         try {
             const result = await AuthController.login({email, password});
 
+            if (result.role === "Estudiante"){
+                sessionStorage.clear();
+                localStorage.clear();
+
+                setError("Los estudiantes deben iniciar sesión desde la aplicación movil");
+                return;
+            }
+
+            if (result.firstSigIn) {
+                sessionStorage.clear();
+                navigate("/first-login", { state: { email, tempPassword: password } });
+                return;
+            }
+
             const realToken = result.token;
 
             localStorage.setItem("token", realToken);
@@ -35,7 +49,7 @@ export default function Login({ setSession}){
             navigate("/home");
         } catch (err) {
             console.error("Error en login: ", err);
-            setError("Usuario o contraseña incorrectos. Intenta de nuevo.");
+            setError(err.message);
         } finally {
             setLoading(false);
         }

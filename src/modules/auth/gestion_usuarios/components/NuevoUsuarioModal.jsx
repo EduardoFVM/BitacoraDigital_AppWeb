@@ -20,6 +20,8 @@ export default function NuevoUsuarioModal({ onUsuarioCreado }) {
             const nameUser = partesNombre[0];
             const lastName = partesNombre.slice(1).join(' ');
 
+            const proyectoFinal = proyecto === '' ? '---' : proyecto;
+
             const nuevoUsuario = {
                 nameUser: nameUser,
                 lastName: lastName,
@@ -40,7 +42,7 @@ export default function NuevoUsuarioModal({ onUsuarioCreado }) {
 
             setNombreCompleto('');
             setCorreo('');
-            setRol('estudiante');
+            setRol('');
             setProyecto('');
             
 
@@ -90,10 +92,12 @@ export default function NuevoUsuarioModal({ onUsuarioCreado }) {
                                 <input 
                                     type="email" 
                                     className="form-control" 
-                                    placeholder="correo@edu.mx" 
+                                    placeholder="correo@utez.edu.mx" 
                                     value={correo}
                                     onChange={(e) => setCorreo(e.target.value)}
                                     required
+                                    pattern="^[a-zA-Z0-9._%+\-]+@utez\.edu\.mx$"
+                                    title="El correo debe pertenecer al dominio institucional (@utez.edu.mx)"
                                 />
                             </div>
                             
@@ -103,25 +107,12 @@ export default function NuevoUsuarioModal({ onUsuarioCreado }) {
                                     className="form-select text-secondary"
                                     value={rol}
                                     onChange={(e) => setRol(e.target.value)}
+                                    required
                                 >
-                                    <option>-- Selecciona Una Opción --</option>
+                                    <option value="" disabled hidden>-- Selecciona Un Rol --</option>
                                     <option value="Estudiante">Estudiante</option>
                                     <option value="Asesor">Asesor</option>
                                     <option value="Administrador">Administrador</option>
-                                </select>
-                            </div>
-                            
-                            <div className="mb-2">
-                                <label className="form-label small fw-medium text-dark">Proyecto Asignado</label>
-                                <select 
-                                    className="form-select text-secondary"
-                                    value={proyecto}
-                                    onChange={(e) => setProyecto(e.target.value)}
-                                >
-                                    <option value="">Nombre del proyecto</option>
-                                    <option value="1">Sistema de Inventarios</option>
-                                    <option value="2">App Móvil Clínica</option>
-                                    <option value="3">API REST Municipal</option>
                                 </select>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // <-- Importante importar useState
+import React, { useState } from "react";
 import { Edit, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function UsuariosTable({ usuarios, onToggleStatus, onEdit }) {
