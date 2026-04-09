@@ -1,0 +1,134 @@
+import React, { useRef, useState } from 'react';
+import UserController from '../user.controller';
+
+export default function NuevoUsuarioModal({ onUsuarioCreado }) {
+
+    const [nombreCompleto, setNombreCompleto] = useState('');
+    const [correo, setCorreo] = useState('');
+    const [rol, setRol] = useState('');
+    const [proyecto, setProyecto] = useState('');
+    const [cargando, setCargando] = useState(false);
+
+    const botonCerrarRef = useRef(null);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setCargando(true);
+
+        try {
+            const partesNombre = nombreCompleto.split(' '); 
+            const nameUser = partesNombre[0];
+            const lastName = partesNombre.slice(1).join(' ');
+
+            const proyectoFinal = proyecto === '' ? '---' : proyecto;
+
+            const nuevoUsuario = {
+                nameUser: nameUser,
+                lastName: lastName,
+                email: correo,
+                rol: rol,
+                status: true
+            };
+
+            await UserController.save(nuevoUsuario);
+
+            if (onUsuarioCreado) {
+                onUsuarioCreado();
+            }
+
+            if (botonCerrarRef.current) {
+                botonCerrarRef.current.click();
+            }
+
+            setNombreCompleto('');
+            setCorreo('');
+            setRol('');
+            setProyecto('');
+            
+
+            
+        } catch (error) {
+            console.error("Error", error);
+            alert("Hubo un error al crear el usuario");
+        } finally {
+            setCargando(false);
+        }
+    }
+
+    return (
+        <div className="modal fade" id="nuevoUsuarioModal" tabIndex="-1" aria-labelledby="nuevoUsuarioModalLabel" aria-hidden="true">
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content border-0 shadow" style={{ borderRadius: '12px' }}>
+                    <div className="modal-header border-0 pb-0 pt-4 px-4 d-flex flex-column align-items-start">
+                        <div className="d-flex justify-content-between w-100 mb-1">
+                            <h5 className="modal-title fw-bold text-dark" id="nuevoUsuarioModalLabel">Crear Nuevo Usuario</h5>
+                            <button 
+                                ref={botonCerrarRef} 
+                                type="button" 
+                                className="btn-close" 
+                                data-bs-dismiss="modal" 
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <p className="text-muted small mb-0">Complete los datos para registrar un nuevo usuario en el sistema.</p>
+                    </div>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="modal-body px-4 py-4">
+                            <div className="mb-3">
+                                <label className="form-label small fw-medium text-dark">Nombre Completo</label>
+                                <input 
+                                    type="text" 
+                                    className="form-control" 
+                                    placeholder="Nombre del usuario" 
+                                    value={nombreCompleto}
+                                    onChange={(e) => setNombreCompleto(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="mb-3">
+                                <label className="form-label small fw-medium text-dark">Correo Electrónico</label>
+                                <input 
+                                    type="email" 
+                                    className="form-control" 
+                                    placeholder="correo@utez.edu.mx" 
+                                    value={correo}
+                                    onChange={(e) => setCorreo(e.target.value)}
+                                    required
+                                    pattern="^[a-zA-Z0-9._%+\-]+@utez\.edu\.mx$"
+                                    title="El correo debe pertenecer al dominio institucional (@utez.edu.mx)"
+                                />
+                            </div>
+                            
+                            <div className="mb-3">
+                                <label className="form-label small fw-medium text-dark">Rol</label>
+                                <select 
+                                    className="form-select text-secondary"
+                                    value={rol}
+                                    onChange={(e) => setRol(e.target.value)}
+                                    required
+                                >
+                                    <option value="" disabled hidden>-- Selecciona Un Rol --</option>
+                                    <option value="Estudiante">Estudiante</option>
+                                    <option value="Asesor">Asesor</option>
+                                    <option value="Administrador">Administrador</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="modal-footer border-0 px-4 pb-4 pt-0 gap-2">
+                            <button type="button" className="btn btn-white border shadow-sm fw-medium px-4" data-bs-dismiss="modal">
+                                Cancelar
+                            </button>
+                            <button type="submit" className="btn btn-primary fw-medium px-4 shadow-sm" disabled={cargando}>
+                                {cargando ? 'Guardando...' : 'Crear Usuario'}
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    );
+}

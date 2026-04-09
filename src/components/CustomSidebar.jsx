@@ -1,20 +1,22 @@
-import { BarChart3, BookOpen, FileCheck, FolderKanban, LayoutDashboard, Settings, Users } from "lucide-react";
+import { BarChart3, BookOpen, FileCheck, FolderKanban, LayoutDashboard, MoveLeft, Settings, Users, CalendarClock } from "lucide-react";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import '../styles/global.css';
 
 {/* Objeto de los links de navegación */}
 const navItems = [
   { path: "/home", label: "Panel Principal", icon: LayoutDashboard },
   { path: "/users", label: "Gestión de Usuarios", icon: Users },
+  { path: "/periods", label: "Periodos", icon: CalendarClock },
   { path: "/projects", label: "Proyectos", icon: FolderKanban },
   { path: "/evidence", label: "Evidencias", icon: FileCheck },
   { path: "/reports", label: "Reportes", icon: BarChart3 },
 ];
 
-export default function CustomSidebar(){
+export default function CustomSidebar({ setSession }){
 
     const [isHovered, setIsHovered] = useState(false);
+    const navigate = useNavigate();
 
     const sidebarStyle = {
         backgroundColor: '#101828',
@@ -28,6 +30,18 @@ export default function CustomSidebar(){
         overflowX: "hidden",
         whiteSpace: "nowrap"
     }
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("role");
+        if (setSession) {
+            setSession(false);
+        }
+
+        navigate("/");
+    };
 
     return(
         <aside 
@@ -47,7 +61,7 @@ export default function CustomSidebar(){
                     style={{ 
                         opacity: isHovered ? 1 : 0, 
                         transition: 'opacity 0.2s ease',
-                        pointerEvents: isHovered ? 'auto' : 'none' // Evita clicks fantasmas
+                        pointerEvents: isHovered ? 'auto' : 'none'
                     }}
                 >
                     <h3 className="h6 mb-0 fw-bold">Bitacora Digital</h3>
@@ -88,26 +102,24 @@ export default function CustomSidebar(){
                 })}
             </nav>
 
-            {/* CONFIGURACIÓN */}
+            {/* Salir */}
             <div className="p-2 border-top border-secondary border-opacity-25 mt-auto">
-                <NavLink 
-                    to="/settings" 
-                    className={({ isActive }) => 
-                        `sidebar-btn btn d-flex align-items-center border-0 w-100 p-2 text-decoration-none ${
-                            isActive ? 'bg-primary text-white' : 'text-white-50'
-                        }`
-                    }
+                <button 
+                    onClick={handleLogout}
+                    className="sidebar-btn btn d-flex align-items-center border-0 w-100 p-2 text-decoration-none text-white-50 hover-bg-danger"
+                    style={{ background: 'transparent' }}
                 >
-                    <Settings size={22} className="flex-shrink-0" />
+                    <MoveLeft size={22} className="flex-shrink-0" />
                     <span 
-                        className="ms-3"
+                        className="ms-3 text-start"
                         style={{ 
                             opacity: isHovered ? 1 : 0, 
-                            transition: 'opacity 0.2s' }}
+                            transition: 'opacity 0.2s' 
+                        }}
                     >
-                        Configuración
+                        Cerrar Sesión
                     </span>
-                </NavLink>
+                </button>
             </div>
         </aside>
     );
