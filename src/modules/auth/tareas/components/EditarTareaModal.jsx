@@ -3,14 +3,14 @@ import TaskController from '../tareas.controller';
 import UserController from '../../gestion_usuarios/user.controller';
 import { useLocation } from 'react-router-dom';
 
-export default function NuevaTareaModal({ onTareaCreada, formData }) {
+export default function EditarTareaModal({ selectedTask, onUpdate, formData }) {
     const location = useLocation();
     const [estudiantes, setEstudiantes] = useState([]);
 
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [dueDate, setDueDate] = useState(new Date());
-    const [idEstudianteAsignado, setIdEstudianteAsignado] = useState('');
+    const [estudianteAsignado, setEstudianteAsignado] = useState({});
     const [cargando, setCargando] = useState(false);
 
     const botonCerrarRef = useRef(null);
@@ -21,50 +21,53 @@ export default function NuevaTareaModal({ onTareaCreada, formData }) {
 
         try {
             const nuevaTarea = {
-                nameTask: titulo,
+				id: selectedTask.id,
+                title: titulo,
                 description: descripcion,
                 dueDate: dueDate,
-                projectId: location.state?.projectId,
-                studentId: idEstudianteAsignado
+                studentId: estudianteAsignado.id
             };
 
-            await TaskController.save(nuevaTarea);
+            await onUpdate(nuevaTarea);
 
-            if (onTareaCreada) {
-                onTareaCreada();
-            }
-
-            if (botonCerrarRef.current) {
-                botonCerrarRef.current.click();
-            }
+            if (botonCerrarRef.current) botonCerrarRef.current.click();
 
             setTitulo('');
             setDescripcion('');
-            setIdEstudianteAsignado(0);
+            setEstudianteAsignado(null);
             
         } catch (error) {
             console.error("Error", error);
-            alert("Hubo un error al crear la tarea");
+            alert("Hubo un error al editar la tarea");
         } finally {
             setCargando(false);
         }
     }
 
-    useEffect(() => {
-        if(formData) {
-            setEstudiantes(formData);
+    const getFormData = async () => {
+        if(location.state.projectId) {
+            setEstudiantes(await UserController.findStudentsByProject(location.state.projectId));
         }
-    }, [])
+    }
+    useEffect(() => {
+		if(selectedTask) {
+			setTitulo(selectedTask.title);
+			setDescripcion(selectedTask.description);
+			setDueDate(selectedTask.dueDate);
+			setEstudianteAsignado(selectedTask.student)
+		}
+        getFormData();
+    }, [selectedTask])
 
     return (
-        <div className="modal fade" id="nuevaTareaModal" tabIndex="-1" aria-labelledby="nuevaTareaModalLabel" aria-hidden="true">
+        <div className="modal fade" id="editarTareaModal" tabIndex="-1" aria-labelledby="editarTareaModalLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content border-0 shadow" style={{ borderRadius: '12px' }}>
                     
                     {/* Cabecera del Modal */}
                     <div className="modal-header border-0 pb-0 pt-4 px-4 d-flex flex-column align-items-start">
                         <div className="d-flex justify-content-between w-100 mb-1">
-                            <h5 className="modal-title fw-bold text-dark" id="nuevoUsuarioModalLabel">Crear Nueva Tarea</h5>
+                            <h5 className="modal-title fw-bold text-dark" id="editarTareaModalLabel">Editar Tarea</h5>
                             <button 
                                 ref={botonCerrarRef} 
                                 type="button" 
@@ -73,7 +76,7 @@ export default function NuevaTareaModal({ onTareaCreada, formData }) {
                                 aria-label="Close"
                             ></button>
                         </div>
-                        <p className="text-muted small mb-0">Complete los datos para registrar una nueva tarea en el sistema.</p>
+                        <p className="text-muted small mb-0">Complete los datos para editar la tarea en el sistema.</p>
                     </div>
 
                     <form onSubmit={handleSubmit}>
@@ -115,8 +118,8 @@ export default function NuevaTareaModal({ onTareaCreada, formData }) {
                                 <label className="form-label small fw-medium text-dark">Estudiante Asignado</label>
                                 <select 
                                     className="form-select text-secondary"
-                                    value={idEstudianteAsignado}
-                                    onChange={(e) => setIdEstudianteAsignado(e.target.value)}
+                                    value={estudianteAsignado.id}
+                                    onChange={(e) => setEstudianteAsignado(e.target.value)}
                                 >
                                     <option value="">Nombre del estudiante</option>
                                     {estudiantes.map((estudiante) => (
@@ -132,7 +135,7 @@ export default function NuevaTareaModal({ onTareaCreada, formData }) {
                             </button>
                             {/* Cambiamos el tipo a "submit" y lo deshabilitamos si está cargando */}
                             <button type="submit" className="btn btn-primary fw-medium px-4 shadow-sm" disabled={cargando}>
-                                {cargando ? 'Guardando...' : 'Crear Tarea'}
+                                {cargando ? 'Guardando...' : 'Editar Tarea'}
                             </button>
                         </div>
                     </form>
