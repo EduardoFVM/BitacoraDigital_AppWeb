@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
+import { addDays } from "../../../../utils/dateUtils";
 
-export default function EditarPeriodoModal({ periodo, onConfirm }) {
+export default function EditarPeriodoModal({ periodo, onConfirm, lowerLimit, upperLimit }) {
    const [periodData, setPeriodData] = useState({
       id: 0,
       name: '',
@@ -8,6 +9,8 @@ export default function EditarPeriodoModal({ periodo, onConfirm }) {
       endDate: ''
    })
    const [cargando, setCargando] = useState(false);
+   const [minStartDate, setMinStartDate] = useState('');
+   const [minEndDate, setMinEndDate] = useState('');
 
    const botonCerrarRef = useRef(null);
 
@@ -80,10 +83,11 @@ export default function EditarPeriodoModal({ periodo, onConfirm }) {
                             <div className="mb-3">
                                 <label className="form-label small fw-medium text-dark">Fecha de inicio</label>
                                 <input 
-                                    type="datetime-local" 
+                                    type="date" 
                                     className="form-control" 
                                     placeholder="Fecha de inicio" 
                                     value={periodData.startDate}
+                                    min={lowerLimit || addDays(periodData.endDate, -120)}
                                     onChange={handleChange}
                                     name="startDate"
                                     required
@@ -93,10 +97,12 @@ export default function EditarPeriodoModal({ periodo, onConfirm }) {
                             <div className="mb-2">
                                 <label className="form-label small fw-medium text-dark">Fecha de fin</label>
                                 <input 
-                                    type="datetime-local" 
+                                    type="date" 
                                     className="form-control" 
                                     placeholder="Fecha de fin" 
                                     value={periodData.endDate}
+                                    min={ addDays(periodData.startDate, 7) }
+                                    max={upperLimit}
                                     onChange={handleChange}
                                     name="endDate"
                                     required

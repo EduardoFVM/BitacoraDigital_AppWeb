@@ -1,8 +1,9 @@
 import { useRef, useState } from "react"
+import { addDays } from "../../../../utils/dateUtils";
 
-export default function NuevoPeriodoModal({ onPeriodoCreado, onConfirm }) {
+export default function NuevoPeriodoModal({ onPeriodoCreado, onConfirm, suggestedStart }) {
    const [periodName, setPeriodName] = useState('');
-   const [startDate, setStartDate] = useState('');
+   const [startDate, setStartDate] = useState(suggestedStart);
    const [endDate, setEndDate] = useState('');
    const [cargando, setCargando] = useState(false);
 
@@ -36,7 +37,6 @@ export default function NuevoPeriodoModal({ onPeriodoCreado, onConfirm }) {
          setCargando(false);
       }
    }
-
    return (
       <div className="modal fade" id="nuevoPeriodoModal" tabIndex="-1" aria-labelledby="nuevoPeriodoModalLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered">
@@ -72,10 +72,11 @@ export default function NuevoPeriodoModal({ onPeriodoCreado, onConfirm }) {
                             <div className="mb-3">
                                 <label className="form-label small fw-medium text-dark">Fecha de inicio</label>
                                 <input 
-                                    type="datetime-local" 
+                                    type="date" 
                                     className="form-control" 
                                     placeholder="Fecha de inicio" 
                                     value={startDate}
+                                    min={suggestedStart}
                                     onChange={(e) => setStartDate(e.target.value)}
                                     required
                                 />
@@ -84,10 +85,12 @@ export default function NuevoPeriodoModal({ onPeriodoCreado, onConfirm }) {
                             <div className="mb-2">
                                 <label className="form-label small fw-medium text-dark">Fecha de fin</label>
                                 <input 
-                                    type="datetime-local" 
+                                    type="date" 
                                     className="form-control" 
                                     placeholder="Fecha de fin" 
                                     value={endDate}
+                                    min={addDays(startDate, 7)}
+                                    max={addDays(startDate, 120)}
                                     onChange={(e) => setEndDate(e.target.value)}
                                     required
                                 />

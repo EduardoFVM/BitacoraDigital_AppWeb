@@ -27,16 +27,8 @@ export default function PeriodosTable({ periodos, onEdit }) {
    };
 
    const formatearFecha = (isoString) => {
-      const date = new Date(isoString);
-      return new Intl.DateTimeFormat('es-ES', {
-         year: 'numeric',
-         month: '2-digit',
-         day: '2-digit',
-         hour: '2-digit',
-         minute: '2-digit',
-         second: '2-digit',
-         hour12: true
-      }).format(date);
+      const [year, month, day] = isoString.split("-");
+      return `${day}/${month}/${year}`
    }
 
    return (

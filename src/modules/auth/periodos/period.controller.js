@@ -20,6 +20,27 @@ PeriodController.getAll = async () =>
    .then(result => (result))
    .catch(console.log);
 
+PeriodController.getMaxEndDate = async () => 
+   await fetch(API_URL+"/max-end-date",
+      {
+         method: "GET",
+         headers: getHeaders()
+      }
+   ).then(response => response.json())
+   .then(result => (result))
+   .catch(console.log);
+
+PeriodController.getPeriodLimits = async (periodData) => 
+   await fetch(API_URL+"/period-limits",
+      {
+         method: "POST",
+         headers: getHeaders(),
+         body: JSON.stringify(periodData)
+      }
+   ).then(response => response.json())
+   .then(result => (result))
+   .catch(console.log);
+
 PeriodController.save = async (periodData) =>
    await fetch(API_URL,
       {

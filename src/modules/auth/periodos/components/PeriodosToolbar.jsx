@@ -2,7 +2,7 @@ import { Funnel, Search } from "lucide-react";
 import { useState } from "react";
 import NuevoPeriodoModal from "./NuevoPeriodoModal";
 
-export default function PeriodosToolbar({ onPeriodoCreado, onSave, busqueda, setBusqueda, filtroStatus, setFiltroStatus }) {
+export default function PeriodosToolbar({ onPeriodoCreado, onSave, busqueda, setBusqueda, filtroStatus, setFiltroStatus, suggestedStart }) {
    const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuario") || "{}");
    const esAdmin = usuarioLogueado.rol === "Administrador" || usuarioLogueado.rol === "ADMIN";
 
@@ -74,7 +74,7 @@ export default function PeriodosToolbar({ onPeriodoCreado, onSave, busqueda, set
                </button>
                )}
          </div>
-         <NuevoPeriodoModal onPeriodoCreado={onPeriodoCreado} onConfirm={onSave} />
+         <NuevoPeriodoModal onPeriodoCreado={onPeriodoCreado} onConfirm={onSave} suggestedStart={suggestedStart} />
       </div>
    )
 }

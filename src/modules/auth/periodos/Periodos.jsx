@@ -8,6 +8,10 @@ export default function Periodos() {
    const [periodos, setPeriodos] = useState([]); 
    const [busqueda, setBusqueda] = useState('');
    const [loading, setLoading] = useState(false);
+   const [loadingForm, setLoadingForm] = useState(false);
+   const [suggestedStart, setSuggestedStart] = useState('');
+   const [lowerLimit, setLowerLimit] = useState('');
+   const [upperLimit, setUpperLimit] = useState('');
    const [filtroStatus, setFiltroStatus] = useState('Todos');
    const [periodoSeleccionado, setPeriodoSeleccionado] = useState(null);
 
@@ -21,9 +25,20 @@ export default function Periodos() {
 
       setLoading(false);
    }
+   const getNextStartDate = async () => {
+      setLoadingForm(true)
+
+      const {data} = await PeriodController.getMaxEndDate();
+      if(data) {
+         setSuggestedStart(data.suggestedStart);
+      }
+
+      setLoadingForm(false);   
+   }
 
    useEffect(() => {
       cargarPeriodos();
+      getNextStartDate();
    }, [])
 
    const periodosFiltrados = periodos.filter((periodo) => {
@@ -45,20 +60,35 @@ export default function Periodos() {
    const handleGuardar = async (datosPeriodo) => {
       await PeriodController.save(datosPeriodo);
       cargarPeriodos();
+      getNextStartDate();
    }
 
-   const handleEditarPeriodo = (periodo) => {
+   const handleEditarPeriodo = async (periodo) => {
+      const {data} = await PeriodController.getPeriodLimits(periodo);
+      if(data) {
+         setLowerLimit(data.lowerLimit);
+         setUpperLimit(data.upperLimit);
+      }
+      
       setPeriodoSeleccionado(periodo);
    }
 
    const handleActualizarPeriodo = async (datosPeriodo) => {
-      await PeriodController.update(datosPeriodo);
+      const {error, message} = await PeriodController.update(datosPeriodo);
+      
+      if(error) {
+         alert("Error al registrar periodo: "+message);
+         return;
+      }
+      
       cargarPeriodos();
+      getNextStartDate();
    }
 
    return (
       <div className="container-fluid p-4">
          <div className="row">
+            {!loadingForm && (
                <PeriodosToolbar 
                   onPeriodoCreado={cargarPeriodos}
                   busqueda={busqueda}
@@ -66,7 +96,9 @@ export default function Periodos() {
                   onSave={handleGuardar}
                   filtroStatus={filtroStatus}
                   setFiltroStatus={setFiltroStatus}
+                  suggestedStart={suggestedStart}
                />
+            )}
 
                <div className="col-12 mt-3">
                   {loading ? (
@@ -86,6 +118,8 @@ export default function Periodos() {
          <EditarPeriodoModal
                periodo={periodoSeleccionado} 
                onConfirm={handleActualizarPeriodo} 
+               lowerLimit={lowerLimit}
+               upperLimit={upperLimit}
          />
       </div>
    );
