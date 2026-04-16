@@ -11,7 +11,7 @@ export default function CustomNavbar() {
     });
 
     useEffect(() => {
-        const usuarioGuardado = sessionStorage.getItem("usuario");
+        const usuarioGuardado = localStorage.getItem("usuario");
         
         if (usuarioGuardado) {
             try {

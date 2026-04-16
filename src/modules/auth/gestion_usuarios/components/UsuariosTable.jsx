@@ -3,7 +3,7 @@ import { Edit, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function UsuariosTable({ usuarios, onToggleStatus, onEdit }) {
     
-    const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuario") || "{}");
+    const usuarioLogueado = JSON.parse(localStorage.getItem("usuario") || "{}");
     const esAdmin = usuarioLogueado.rol === 'Administrador' || usuarioLogueado.rol === 'ADMIN';
     const [paginaActual, setPaginaActual] = useState(1);
     const registrosPorPagina = 10;

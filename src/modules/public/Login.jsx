@@ -12,7 +12,7 @@ export default function Login({ setSession}){
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if(!!sessionStorage.getItem('token')){
+        if(!!localStorage.getItem('token')){
             navigate("/home");
         }
     }, [navigate]);

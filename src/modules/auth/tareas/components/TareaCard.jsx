@@ -32,32 +32,37 @@ export default function TareaCard({ tarea, editable, onEdit }) {
    }
    const agregarSubtarea = async () => {
       if (nuevaSubtarea.trim()) {
-         const nuevaSubtareaObj = {
-            id: null,
-            name: nuevaSubtarea,
-            checked: false
+         const nombreSubtarea = nuevaSubtarea;
+         const nuevaSubtareaObj = { id: null, name: nombreSubtarea, checked: false };
+
+         // Añadir optimistamente usando función para evitar closure stale
+         setSubtareas(prev => [...prev, nuevaSubtareaObj]);
+
+         try {
+            const response = await TaskController.saveSubtask({
+               idTask: item.id,
+               name: nombreSubtarea,
+            });
+
+            if (response?.error) {
+               // El backend reportó un error — revertir
+               alert("Ocurrió un error al guardar la subtarea: " + response.message);
+               setSubtareas(prev => prev.filter(sub => !(sub.name === nombreSubtarea && sub.id === null)));
+            } else {
+               // Éxito — asignar el ID que devolvió el backend
+               setSubtareas(prev =>
+                  prev.map(element =>
+                     element.name === nombreSubtarea && element.id === null
+                        ? { ...element, id: response.data }
+                        : element
+                  )
+               );
+            }
+         } catch (errorEx) {
+            console.error("Error al guardar subtarea:", errorEx);
+            alert("Ocurrió un error al comunicarse con el servidor.");
+            setSubtareas(prev => prev.filter(sub => !(sub.name === nombreSubtarea && sub.id === null)));
          }
-         setSubtareas([...subtareas, nuevaSubtareaObj]);
-         
-         const response = await TaskController.saveSubtask({
-            idTask: item.id,
-            name: nuevaSubtareaObj.name,
-         });
-
-         setSubtareas(prev => 
-            prev.map((element) => {
-               if(element.name === nuevaSubtarea) {
-                  return {...element, id: response.data};
-               }
-               return element;
-            })
-         );
-
-         if(!response.ok) {
-            alert("Ocurrió un error al guardar la subtarea: "+message);
-            setSubtareas(subtareas.filter(sub => sub.name !== nuevaSubtarea))
-         }
-
       }
       setNuevaSubtarea('');
       setEditando(false);
@@ -276,7 +281,7 @@ export default function TareaCard({ tarea, editable, onEdit }) {
                      placeholder="Nombre de la subtarea..."
                      autoFocus
                      />
-                     <button className="btn btn-primary" onClick={agregarSubtarea}>Agregar</button>
+                     <button className="btn btn-primary" onMouseDown={e => e.preventDefault()} onClick={agregarSubtarea}>Agregar</button>
                   </div>
                )
             )}

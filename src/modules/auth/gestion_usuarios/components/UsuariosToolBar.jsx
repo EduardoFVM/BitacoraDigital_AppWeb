@@ -8,7 +8,7 @@ export default function UsuariosToolbar({
     filtroRol, 
     setFiltroRol 
 }) {
-    const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuario") || "{}");
+    const usuarioLogueado = JSON.parse(localStorage.getItem("usuario") || "{}");
     const esAdmin = usuarioLogueado.rol === "Administrador" || usuarioLogueado.rol === "ADMIN";
     return (
         <div className="col-12 gap-3 justify-content-between d-flex mb-5 flex-wrap">

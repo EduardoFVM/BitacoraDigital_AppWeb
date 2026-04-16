@@ -3,34 +3,81 @@ import BaseCard from "../../../components/cards/BaseCard";
 import EstadisticasCard from "./components/EstadisticasCard";
 import ProgresoProyectoItem from "./components/ProgresoProyectoItem";
 import ValidacionesCard from "./components/ValidacionesCard";
+import ProjectController from "../proyectos/proyectos.controller";
+import EvidenceController from "../evidencias/evidences.controller";
 
-const MOCK_STATS = [
-    { title: "Estudiantes Activos", value: "48", iconId: "users", color: "bg-primary" },
-    { title: "Proyectos en Curso", value: "12", iconId: "projects", color: "bg-danger" },
-    { title: "Tareas Completadas", value: "156", iconId: "tasks", color: "bg-success" },
-];
-
-const MOCK_ADVANCE = [
-    { title: "Sistema de inventarios", progress: 75 },
-    { title: "App Móvil Clínica", progress: 45 },
-    { title: "Portal Web Escolar", progress: 90 },
-    { title: "API REST Municipal", progress: 30 }
-];
-
-const MOCK_ACTIVITIES = [
-    { name: "Pedro Ramirez", title: "Módulo de autenticación", date: "04/02/2026", type: "Archivo" },
-    { name: "Sofia Torres", title: "Base de datos relacional", date: "04/02/2026", type: "Texto" },
-    { name: "Diego Flores", title: "Interfaz de usuario", date: "04/02/2026", type: "Archivo" }
-];
+const formatDate = (rawDate) => {
+    if (!rawDate) return "--/--/----";
+    if (Array.isArray(rawDate)) {
+        const [year, month, day] = rawDate;
+        return `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
+    }
+    return new Date(rawDate).toLocaleDateString("es-MX");
+};
 
 export default function PanelPrincipal() {
-    
-    const [stats, setStats] = useState(MOCK_STATS);
-    const [advance, setAdvance] = useState(MOCK_ADVANCE);
-    const [activities, setActivities] = useState(MOCK_ACTIVITIES);
-    const [cargando, setCargando] = useState(false);
+    const [stats, setStats] = useState([
+        { title: "Estudiantes Activos", value: 0, iconId: "users", color: "bg-primary" },
+        { title: "Proyectos en Curso", value: 0, iconId: "projects", color: "bg-danger" },
+        { title: "Tareas Completadas", value: 0, iconId: "tasks", color: "bg-success" },
+    ]);
+    const [advance, setAdvance] = useState([]);
+    const [activities, setActivities] = useState([]);
+    const [cargando, setCargando] = useState(true);
 
-    if(cargando) return <div className="p-5 text-center">Cargando panel...</div>;
+    useEffect(() => {
+        const cargarDatos = async () => {
+            const role = localStorage.getItem("role");
+            const userId = localStorage.getItem("userId");
+
+            let proyectosResponse;
+            if (role === "Administrador") {
+                proyectosResponse = await ProjectController.getAll();
+            } else {
+                proyectosResponse = await ProjectController.getByAdvisor(userId);
+            }
+            const proyectos = proyectosResponse?.data || [];
+
+            const totalStudents = proyectos.reduce((sum, p) => sum + (p.studentCount || 0), 0);
+            const totalCompleted = proyectos.reduce((sum, p) => sum + (p.completedTasks || 0), 0);
+
+            setStats([
+                { title: "Estudiantes Activos", value: totalStudents, iconId: "users", color: "bg-primary" },
+                { title: "Proyectos en Curso", value: proyectos.length, iconId: "projects", color: "bg-danger" },
+                { title: "Tareas Completadas", value: totalCompleted, iconId: "tasks", color: "bg-success" },
+            ]);
+
+            setAdvance(proyectos.map(p => ({
+                title: p.name,
+                progress: p.totalTasks > 0 ? Math.round((p.completedTasks / p.totalTasks) * 100) : 0
+            })));
+
+            let evidenciasResponse;
+            if (role === "Administrador") {
+                evidenciasResponse = await EvidenceController.getAll();
+            } else {
+                evidenciasResponse = await EvidenceController.getByAdvisorId(userId);
+            }
+            const evidencias = evidenciasResponse?.data || [];
+
+            const pendientes = evidencias
+                .filter(e => e.status === "in_revision")
+                .slice(0, 5)
+                .map(e => ({
+                    name: e.studentName,
+                    title: e.taskName,
+                    date: formatDate(e.uploadDate),
+                    type: "Evidencia"
+                }));
+
+            setActivities(pendientes);
+            setCargando(false);
+        };
+
+        cargarDatos();
+    }, []);
+
+    if (cargando) return <div className="p-5 text-center">Cargando panel...</div>;
 
     return (
         <div className="container-fluid p-0">
@@ -42,33 +89,35 @@ export default function PanelPrincipal() {
 
             <div className="row g-4">
                 <div className="col-12 col-lg-8">
-                    <BaseCard style={{ height: '100%', minHeight: '620px' }}>
+                    <BaseCard style={{ height: "100%", minHeight: "620px" }}>
                         <div className="p-4 mb-4 d-flex justify-content-between align-items-center">
                             <p className="h4 fw-bold mb-0">Avance por Proyecto</p>
-                            <span className="text-primary" style={{ cursor: 'pointer' }}>Ver todos &gt;</span>
                         </div>
                         <div className="p-4">
-                            {advance.map((item, index) => (
-                                <ProgresoProyectoItem key={index} item={item} />
-                            ))}
+                            {advance.length === 0 ? (
+                                <p className="text-muted text-center">Sin proyectos registrados.</p>
+                            ) : (
+                                advance.map((item, index) => (
+                                    <ProgresoProyectoItem key={index} item={item} />
+                                ))
+                            )}
                         </div>
                     </BaseCard>
                 </div>
 
                 <div className="col-12 col-lg-4">
-                    <BaseCard style={{ height: '100%', minHeight: '620px' }}>
+                    <BaseCard style={{ height: "100%", minHeight: "620px" }}>
                         <div className="p-4">
                             <p className="h4 fw-bold mb-4">Validaciones Pendientes</p>
-                            
                             <div className="d-flex flex-column">
-                                {activities.map((activity, index) => (
-                                    <ValidacionesCard key={index} item={activity} />
-                                ))}
+                                {activities.length === 0 ? (
+                                    <p className="text-muted text-center">Sin validaciones pendientes.</p>
+                                ) : (
+                                    activities.map((activity, index) => (
+                                        <ValidacionesCard key={index} item={activity} />
+                                    ))
+                                )}
                             </div>
-
-                            <button className="btn btn-outline-secondary text-primary w-100 mt-3 fw-bold">
-                                Ver todas las validaciones
-                            </button>
                         </div>
                     </BaseCard>
                 </div>

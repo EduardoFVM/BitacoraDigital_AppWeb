@@ -18,24 +18,25 @@ AuthController.login = async (credentials) => {
     }
 
     const resultado = await response.json();
+    const authData = resultado.data;
 
-    if (resultado.token) {
-        sessionStorage.setItem("token", resultado.token);
+    if (authData.token) {
+        localStorage.setItem("token", authData.token);
     }
 
-    let rolAmigable = resultado.role;
-    if (resultado.role === "Estudiante") rolAmigable = "Estudiante";
-    if (resultado.role === "Administrador") rolAmigable = "Administrador";
+    let rolAmigable = authData.role;
+    if (authData.role === "Estudiante") rolAmigable = "Estudiante";
+    if (authData.role === "Administrador") rolAmigable = "Administrador";
 
     const usuarioGuardar = {
-        id: resultado.userId,
+        id: authData.userId,
         rol: rolAmigable,
-        nombre: resultado.userName 
+        nombre: authData.userName
     };
 
-    sessionStorage.setItem("usuario", JSON.stringify(usuarioGuardar));
+    localStorage.setItem("usuario", JSON.stringify(usuarioGuardar));
 
-    return resultado;
+    return authData;
 };
 
 AuthController.completeFirstLogin = async (data) => {
@@ -53,24 +54,25 @@ AuthController.completeFirstLogin = async (data) => {
     }
 
     const resultado = await response.json();
-    
-    if (resultado.token) {
-        sessionStorage.setItem("token", resultado.token);
+    const authData = resultado.data;
+
+    if (authData.token) {
+        localStorage.setItem("token", authData.token);
     }
 
-    let rolAmigable = resultado.role;
-    if (resultado.role === "Estudiante") rolAmigable = "Estudiante";
-    if (resultado.role === "Administrador") rolAmigable = "Administrador";
+    let rolAmigable = authData.role;
+    if (authData.role === "Estudiante") rolAmigable = "Estudiante";
+    if (authData.role === "Administrador") rolAmigable = "Administrador";
 
     const usuarioGuardar = {
-        id: resultado.userId,
+        id: authData.userId,
         rol: rolAmigable,
-        nombre: resultado.userName 
+        nombre: authData.userName
     };
 
-    sessionStorage.setItem("usuario", JSON.stringify(usuarioGuardar));
+    localStorage.setItem("usuario", JSON.stringify(usuarioGuardar));
 
-    return resultado;
+    return authData;
 };
 
 export default AuthController;

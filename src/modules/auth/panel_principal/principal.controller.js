@@ -1,17 +1,19 @@
 const PrincipalController = {}
-const API_URL = "";
-const HEADERS = {
-    "content-type" : "application/json",
-    "accept" : "application/json"
-}
+const API_URL = "http://localhost:8081/api/dashboards";
 
-PrincipalController.findAll = async () =>
-    await fetch(API_URL, {
+const getHeaders = () => ({
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "Authorization": `Bearer ${localStorage.getItem("token")}`
+});
+
+PrincipalController.getByStudent = async (studentId) =>
+    await fetch(`${API_URL}/student/${studentId}`, {
         method: "GET",
-        headers: HEADERS
+        headers: getHeaders()
     })
     .then(response => response.json())
-    .then(result => (result))
-    .catch(console.log())
+    .then(result => result)
+    .catch(console.log);
 
 export default PrincipalController

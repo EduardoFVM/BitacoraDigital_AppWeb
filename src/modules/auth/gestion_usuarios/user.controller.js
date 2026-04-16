@@ -26,16 +26,18 @@ UserController.findAll = async () =>
         return [];
     });
 
-UserController.findStudentsByProject = async (projectId) => 
+UserController.findStudentsByProject = async (projectId) =>
     await fetch(`${API_URL}/students/${projectId}`, {
         method: "GET",
         headers: getHeaders()
     })
     .then(response => {
+        // 404 significa lista vacía (el backend retorna NOT_FOUND cuando no hay estudiantes)
+        if (response.status === 404) return { data: [] };
         if(!response.ok) throw new Error("Error al consultar el backend");
         return response.json();
     })
-    .then(result => result.data)
+    .then(result => result.data || [])
     .catch(error => {
         console.error("Error al obtener la lista de estudiantes:", error);
         return [];
