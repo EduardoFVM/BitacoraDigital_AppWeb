@@ -3,7 +3,7 @@ import { useState } from "react";
 import NuevoPeriodoModal from "./NuevoPeriodoModal";
 
 export default function PeriodosToolbar({ onPeriodoCreado, onSave, busqueda, setBusqueda, filtroStatus, setFiltroStatus, suggestedStart }) {
-   const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuario") || "{}");
+   const usuarioLogueado = JSON.parse(localStorage.getItem("usuario") || "{}");
    const esAdmin = usuarioLogueado.rol === "Administrador" || usuarioLogueado.rol === "ADMIN";
 
    return (

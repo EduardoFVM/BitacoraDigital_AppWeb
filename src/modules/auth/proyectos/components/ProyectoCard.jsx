@@ -11,8 +11,7 @@ export default function ProyectoCard({ proyecto, setSelectedProjectId }) {
     const progress = (Math.round(proyecto?.completedTasks / proyecto?.totalTasks * 100)) || 0;
     const taskCount = `${proyecto?.completedTasks}/${proyecto?.totalTasks}` || "0/0";
     const hours = proyecto?.workedHours || 0;
-    const students = proyecto?.studentCount || 0;
-    const status = proyecto?.status || "[Estado]";
+    const students = proyecto?.studentCount || 0;   
 
     const isHighProgress = progress >= 80;
     const badgeColorClass = isHighProgress ? "text-success" : "text-primary";

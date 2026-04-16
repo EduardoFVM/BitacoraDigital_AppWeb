@@ -18,25 +18,25 @@ AuthController.login = async (credentials) => {
     }
 
     const resultado = await response.json();
-    const authData = resultado.data;
+   
 
-    if (authData.token) {
-        localStorage.setItem("token", authData.token);
+    if (resultado.token) {
+        localStorage.setItem("token", resultado.token);
     }
 
-    let rolAmigable = authData.role;
-    if (authData.role === "Estudiante") rolAmigable = "Estudiante";
-    if (authData.role === "Administrador") rolAmigable = "Administrador";
+    let rolAmigable = resultado.role;
+    if (resultado.role === "Estudiante") rolAmigable = "Estudiante";
+    if (resultado.role === "Administrador") rolAmigable = "Administrador";
 
     const usuarioGuardar = {
-        id: authData.userId,
+        id: resultado.userId,
         rol: rolAmigable,
-        nombre: authData.userName
+        nombre: resultado.userName
     };
 
     localStorage.setItem("usuario", JSON.stringify(usuarioGuardar));
 
-    return authData;
+    return resultado;
 };
 
 AuthController.completeFirstLogin = async (data) => {
@@ -54,25 +54,25 @@ AuthController.completeFirstLogin = async (data) => {
     }
 
     const resultado = await response.json();
-    const authData = resultado.data;
+  
 
-    if (authData.token) {
-        localStorage.setItem("token", authData.token);
+    if (resultado.token) {
+        localStorage.setItem("token", resultado.token);
     }
 
-    let rolAmigable = authData.role;
-    if (authData.role === "Estudiante") rolAmigable = "Estudiante";
-    if (authData.role === "Administrador") rolAmigable = "Administrador";
+    let rolAmigable = resultado.role;
+    if (resultado.role === "Estudiante") rolAmigable = "Estudiante";
+    if (resultado.role === "Administrador") rolAmigable = "Administrador";
 
     const usuarioGuardar = {
-        id: authData.userId,
+        id: resultado.userId,
         rol: rolAmigable,
-        nombre: authData.userName
+        nombre: resultado.userName
     };
 
     localStorage.setItem("usuario", JSON.stringify(usuarioGuardar));
 
-    return authData;
+    return resultado;
 };
 
 export default AuthController;
